@@ -1,0 +1,22 @@
+{
+  "name": "sightline-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sightline — The comprehension and control layer for AI-built software",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "pnpm@11.24.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
