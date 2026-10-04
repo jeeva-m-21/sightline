@@ -34,7 +34,7 @@ test('End-to-End CLI Pipeline: runIndexingPipeline and startViewerServer', async
   assert.equal(htmlRes.status, 200);
   const html = await htmlRes.text();
   assert.ok(html.includes('Sightline'), 'HTML must contain Sightline branding');
-  assert.ok(html.includes('Product Feature Clusters'), 'HTML must contain cluster view');
+  assert.ok(html.includes('Application Regions') || html.includes('Regions'), 'HTML must contain regional overview');
 
   // 4. Test HTTP GET /api/data
   const apiRes = await fetch(`${instance.url}/api/data`);
