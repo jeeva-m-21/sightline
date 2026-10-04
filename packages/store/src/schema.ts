@@ -52,6 +52,11 @@ CREATE TABLE IF NOT EXISTS feature_cluster (
   PRIMARY KEY (snapshot_id, id)
 );
 
+CREATE TABLE IF NOT EXISTS project_tree (
+  snapshot_id TEXT PRIMARY KEY REFERENCES snapshot(id),
+  tree_json   TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS flow (
   id             TEXT PRIMARY KEY,
   snapshot_id    TEXT REFERENCES snapshot(id),

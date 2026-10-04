@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Codewalk - Chapter 02: Data Architecture &amp; Entity Lifecycle</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            app: {
+              bg: "#080B10",
+              panel: "#0D1117",
+              card: "#111821",
+              selected: "#151E29",
+              border: "#202A36",
+              divider: "#2A3746",
+              blue: "#6EA8FE",
+              blueHover: "#8DBBFF",
+              accent: "#9B8AFB",
+              valid: "#49C58A",
+              warn: "#D6A84F",
+              error: "#E06C75",
+              textPrimary: "#F1F5F9",
+              textSecondary: "#C4CED9",
+              textMeta: "#8C9AAA",
+              textDisabled: "#657384"
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'order-focus': '0 0 0 1px #6EA8FE, 0 4px 20px rgba(110, 168, 254, 0.08)'
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #202A36; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2A3746; }
+  </style>
+</head>
+<body class="bg-[#080B10] text-app-textPrimary font-sans antialiased min-h-screen selection:bg-[#6EA8FE]/20 selection:text-[#8DBBFF]">
+<!-- TOP APP HEADER -->
+<header class="sticky top-0 z-50 h-13 bg-[#0D1117]/90 backdrop-blur-md border-b border-[#202A36] px-5 flex items-center justify-between">
+<!-- Left: Minimal Branding & Context -->
+<div class="flex items-center gap-3 min-w-[300px]">
+<div class="flex items-center gap-2 mr-1">
+<span class="w-2.5 h-2.5 rounded-full bg-[#202A36] border border-[#2A3746]"></span>
+<span class="font-semibold text-sm tracking-tight text-app-textPrimary">Codewalk</span>
+</div>
+<div class="h-3 w-[1px] bg-[#2A3746]"></div>
+<div class="flex items-center gap-1.5 text-xs font-mono text-app-textMeta">
+<span class="hover:text-app-textSecondary cursor-pointer transition-colors">backend-service</span>
+<span class="text-app-textDisabled">/</span>
+<span class="hover:text-app-textSecondary cursor-pointer transition-colors">packages</span>
+<span class="text-app-textDisabled">/</span>
+<span class="text-app-textSecondary">models</span>
+</div>
+<div class="flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#111821] border border-[#202A36] text-[11px] font-mono text-app-textMeta">
+<span class="w-1.5 h-1.5 rounded-full bg-[#49C58A]"></span>
+<span>main</span>
+</div>
+</div>
+<!-- Center: Primary Mode Indicator -->
+<div class="hidden xl:flex items-center px-2 py-1 rounded-md bg-[#111821] border border-[#202A36] text-xs">
+<span class="px-2.5 py-0.5 rounded bg-[#151E29] text-[#6EA8FE] font-medium border border-[#202A36]">Architecture Spec</span>
+<span class="px-2.5 py-0.5 text-app-textMeta hover:text-app-textSecondary cursor-pointer transition-colors">Source Graph</span>
+<span class="px-2.5 py-0.5 text-app-textMeta hover:text-app-textSecondary cursor-pointer transition-colors">State Invariants</span>
+</div>
+<!-- Right: Search & Inspector Toggle -->
+<div class="flex items-center gap-2.5 justify-end min-w-[300px]">
+<div class="flex items-center gap-2 px-2.5 py-1.5 bg-[#111821] border border-[#202A36] rounded-md text-app-textMeta text-xs w-48 justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-app-textDisabled">search</span>
+<span class="text-app-textMeta text-[12px]">Search spec...</span>
+</div>
+<kbd class="font-mono text-[10px] bg-[#080B10] border border-[#202A36] px-1 py-0.2 rounded text-app-textDisabled">⌘K</kbd>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#111821] border border-[#202A36] text-app-textSecondary text-xs rounded-md">
+<span class="material-symbols-outlined text-[15px] text-[#6EA8FE]">view_sidebar</span>
+<span class="text-[12px]">Inspector</span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#49C58A] ml-1"></span>
+</div>
+</div>
+</header>
+<!-- MAIN 3-COLUMN WORKSPACE CONTAINER -->
+<div class="max-w-[1780px] mx-auto px-5 py-5">
+<div class="flex flex-col lg:flex-row gap-6 items-start">
+<!-- LEFT NAVIGATION: SUPPORTING TOOL (width ~260px) -->
+<aside class="w-full lg:w-[260px] shrink-0 flex flex-col gap-4 sticky top-[72px]">
+<!-- View Scope -->
+<div class="bg-[#0D1117] border border-[#202A36] rounded-lg p-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-xs text-app-textSecondary font-medium">
+<span class="material-symbols-outlined text-[15px] text-[#6EA8FE]">menu_book</span>
+<span>Guide Index</span>
+</div>
+<span class="text-[10px] font-mono text-app-textMeta px-1.5 py-0.5 rounded bg-[#111821] border border-[#202A36]">6 Chapters</span>
+</div>
+<!-- Clean Guide Index with 3px Accent Indicator -->
+<div class="bg-[#0D1117] border border-[#202A36] rounded-lg p-2.5 flex flex-col gap-1 text-xs">
+<!-- Item 01 -->
+<a class="flex items-center justify-between px-2.5 py-2 rounded-md hover:bg-[#111821] text-app-textMeta hover:text-app-textSecondary transition-colors" href="#">
+<div class="flex items-center gap-2 truncate">
+<span class="font-mono text-[11px] text-[#49C58A]">✓</span>
+<span class="truncate">01. System Architecture</span>
+</div>
+<span class="font-mono text-[10px] text-app-textDisabled">4m</span>
+</a>
+<!-- Item 02: ACTIVE -->
+<a class="flex items-center justify-between px-2.5 py-2 rounded-md bg-[#151E29] text-app-textPrimary relative border-l-[3px] border-l-[#6EA8FE] transition-colors" href="#">
+<div class="flex items-center gap-2 truncate pl-0.5">
+<span class="font-mono text-[11px] font-semibold text-[#6EA8FE]">02</span>
+<span class="truncate font-medium text-app-textPrimary">Data Layer &amp; Models</span>
+</div>
+<span class="font-mono text-[9px] uppercase tracking-wider text-[#6EA8FE] font-semibold">Active</span>
+</a>
+<!-- Item 03 -->
+<a class="flex items-center justify-between px-2.5 py-2 rounded-md hover:bg-[#111821] text-app-textMeta hover:text-app-textSecondary transition-colors" href="#">
+<div class="flex items-center gap-2 truncate">
+<span class="font-mono text-[11px] text-app-textDisabled">03</span>
+<span class="truncate">03. API Gateway &amp; Ingress</span>
+</div>
+<span class="font-mono text-[10px] text-app-textDisabled">5m</span>
+</a>
+<!-- Item 04 -->
+<a class="flex items-center justify-between px-2.5 py-2 rounded-md hover:bg-[#111821] text-app-textMeta hover:text-app-textSecondary transition-colors" href="#">
+<div class="flex items-center gap-2 truncate">
+<span class="font-mono text-[11px] text-app-textDisabled">04</span>
+<span class="truncate">04. Order State Transitions</span>
+</div>
+<span class="font-mono text-[10px] text-app-textDisabled">6m</span>
+</a>
+<!-- Item 05 -->
+<a class="flex items-center justify-between px-2.5 py-2 rounded-md hover:bg-[#111821] text-app-textMeta hover:text-app-textSecondary transition-colors" href="#">
+<div class="flex items-center gap-2 truncate">
+<span class="font-mono text-[11px] text-app-textDisabled">05</span>
+<span class="truncate">05. Idempotency &amp; Rollbacks</span>
+</div>
+<span class="font-mono text-[10px] text-app-textDisabled">4m</span>
+</a>
+<!-- Item 06 -->
+<a class="flex items-center justify-between px-2.5 py-2 rounded-md hover:bg-[#111821] text-app-textMeta hover:text-app-textSecondary transition-colors" href="#">
+<div class="flex items-center gap-2 truncate">
+<span class="font-mono text-[11px] text-app-textDisabled">06</span>
+<span class="truncate">06. Audit Log &amp; Immutability</span>
+</div>
+<span class="font-mono text-[10px] text-app-textDisabled">3m</span>
+</a>
+</div>
+<!-- Project Navigator / Scoped Tree View -->
+<div class="bg-[#0D1117] border border-[#202A36] rounded-lg p-3 flex flex-col gap-2">
+<div class="flex items-center justify-between pb-1.5 border-b border-[#202A36]">
+<span class="text-[10px] uppercase font-mono tracking-wider text-app-textMeta font-semibold">Project Navigator</span>
+<span class="text-[10px] font-mono text-app-textDisabled">models/</span>
+</div>
+<div class="flex flex-col gap-0.5 text-xs font-mono">
+<div class="flex items-center gap-1.5 py-1 px-1.5 rounded hover:bg-[#111821] text-app-textSecondary cursor-pointer">
+<span class="material-symbols-outlined text-[13px] text-app-textDisabled">folder_open</span>
+<span>packages/models</span>
+</div>
+<div class="ml-3 pl-2 border-l border-[#202A36] flex flex-col gap-0.5">
+<div class="flex items-center justify-between py-1 px-1.5 rounded hover:bg-[#111821] text-app-textMeta hover:text-app-textSecondary cursor-pointer">
+<span class="text-[11px]">user.py</span>
+<span class="text-[9px] text-app-textDisabled">entity</span>
+</div>
+<!-- Active selected file -->
+<div class="flex items-center justify-between py-1 px-1.5 rounded bg-[#151E29] text-app-textPrimary border border-[#202A36] cursor-pointer">
+<span class="text-[11px] font-medium text-[#6EA8FE]">order.py</span>
+<span class="text-[9px] font-mono text-app-textMeta">selected</span>
+</div>
+<div class="flex items-center justify-between py-1 px-1.5 rounded hover:bg-[#111821] text-app-textMeta hover:text-app-textSecondary cursor-pointer">
+<span class="text-[11px]">ledger.py</span>
+<span class="text-[9px] text-[#49C58A]">immutable</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Muted Git Context Tag -->
+<div class="bg-[#0D1117] border border-[#202A36] rounded-lg p-2.5 flex items-center justify-between text-[10px] font-mono text-app-textMeta">
+<span>HEAD: 7f4a21</span>
+<span class="text-app-textDisabled">Schema v2.4</span>
+</div>
+</aside>
+<!-- CENTER ARCHITECTURE WORKSPACE: HERO CANVAS (54-58% width) -->
+<main class="flex-1 w-full min-w-0 flex flex-col gap-6">
+<!-- Chapter Header -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-mono font-semibold text-[#6EA8FE] tracking-wider uppercase">GUIDE 02 · PERSISTENCE &amp; DATA LAYER</span>
+</div>
+<h1 class="text-[30px] font-medium tracking-tight text-app-textPrimary leading-snug">
+            Data Architecture &amp; Entity Lifecycle
+          </h1>
+<p class="text-app-textSecondary text-sm leading-relaxed max-w-3xl">
+            The persistence model separates operational transactional entities from append-only financial records. Review the three core domain models and their cardinality and isolation guarantees.
+          </p>
+</div>
+<!-- QUESTION 1: WHAT EXISTS? (Relational Entity Graph) -->
+<section class="bg-[#0D1117] border border-[#202A36] rounded-lg p-5 flex flex-col gap-4">
+<!-- Graph Header & Controls -->
+<div class="flex items-center justify-between pb-3 border-b border-[#202A36]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-[#6EA8FE]">schema</span>
+<h2 class="text-sm font-semibold text-app-textPrimary">Relational Entity Graph</h2>
+<span class="text-[11px] font-mono text-app-textMeta bg-[#111821] border border-[#202A36] px-2 py-0.5 rounded">3 domain models · active session</span>
+</div>
+<div class="flex items-center gap-2 text-xs font-mono text-app-textMeta">
+<span class="text-[11px]">Direct Cardinality Mappings</span>
+</div>
+</div>
+<!-- Cards Grid with Explicit Connections -->
+<div class="flex flex-col gap-3">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<!-- User Entity Card -->
+<div class="bg-[#111821] border border-[#202A36] rounded-md p-3.5 flex flex-col justify-between">
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between pb-2 border-b border-[#202A36]">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-app-textMeta"></span>
+<span class="font-mono text-xs font-semibold text-app-textPrimary">User</span>
+</div>
+<span class="text-[10px] font-mono text-app-textMeta">users</span>
+</div>
+<!-- Schema fields -->
+<div class="flex flex-col gap-1.5 text-xs font-mono">
+<div class="flex items-center justify-between text-app-textSecondary">
+<span class="flex items-center gap-1"><span class="text-[9px] text-[#6EA8FE] font-bold">PK</span> id</span>
+<span class="text-[10px] text-app-textDisabled">uuid</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span>email</span>
+<span class="text-[10px] text-app-textDisabled">string</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span>role</span>
+<span class="text-[10px] text-app-textDisabled">enum</span>
+</div>
+</div>
+</div>
+<div class="pt-2.5 mt-2 border-t border-[#202A36] flex items-center justify-between text-[10px] font-mono">
+<span class="text-app-textDisabled cursor-pointer hover:text-app-textMeta transition-colors">+ 5 secondary fields</span>
+<span class="text-app-textMeta">Root Model</span>
+</div>
+</div>
+<!-- Order Entity Card (CURRENTLY SELECTED - Restrained Halo & Active State) -->
+<div class="bg-[#151E29] border border-[#6EA8FE] shadow-order-focus rounded-md p-3.5 flex flex-col justify-between relative">
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between pb-2 border-b border-[#2A3746]">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#6EA8FE]"></span>
+<span class="font-mono text-xs font-semibold text-app-textPrimary">Order</span>
+</div>
+<span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#6EA8FE]/10 text-[#6EA8FE] border border-[#6EA8FE]/30 font-medium">Selected Entity</span>
+</div>
+<!-- Schema fields -->
+<div class="flex flex-col gap-1.5 text-xs font-mono">
+<div class="flex items-center justify-between text-app-textPrimary">
+<span class="flex items-center gap-1 font-medium"><span class="text-[9px] text-[#6EA8FE] font-bold">PK</span> id</span>
+<span class="text-[10px] text-app-textMeta">uuid</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span class="flex items-center gap-1"><span class="text-[9px] text-app-textMeta font-bold">FK</span> user_id</span>
+<span class="text-[10px] text-[#6EA8FE]">→ users.id</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span>status</span>
+<span class="text-[10px] text-app-textMeta">order_status</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span>total_cents</span>
+<span class="text-[10px] text-app-textMeta">bigint</span>
+</div>
+</div>
+</div>
+<div class="pt-2.5 mt-2 border-t border-[#2A3746] flex items-center justify-between text-[10px] font-mono">
+<span class="text-[#6EA8FE] font-medium">Transactional Model</span>
+<span class="text-app-textMeta">Mutable Lifecycle</span>
+</div>
+</div>
+<!-- PaymentLedger Entity Card (Immutable Audit) -->
+<div class="bg-[#111821] border border-[#202A36] rounded-md p-3.5 flex flex-col justify-between">
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between pb-2 border-b border-[#202A36]">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#49C58A]"></span>
+<span class="font-mono text-xs font-semibold text-app-textPrimary">PaymentLedger</span>
+</div>
+<span class="text-[10px] font-mono text-[#49C58A] bg-[#49C58A]/10 border border-[#49C58A]/20 px-1.5 py-0.2 rounded">Immutable</span>
+</div>
+<!-- Schema fields -->
+<div class="flex flex-col gap-1.5 text-xs font-mono">
+<div class="flex items-center justify-between text-app-textSecondary">
+<span class="flex items-center gap-1"><span class="text-[9px] text-[#6EA8FE] font-bold">PK</span> id</span>
+<span class="text-[10px] text-app-textDisabled">uuid</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span class="flex items-center gap-1"><span class="text-[9px] text-app-textMeta font-bold">FK</span> order_id</span>
+<span class="text-[10px] text-[#6EA8FE]">→ orders.id</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span>amount_cents</span>
+<span class="text-[10px] text-app-textDisabled">bigint</span>
+</div>
+<div class="flex items-center justify-between text-app-textSecondary">
+<span>tamper_hash</span>
+<span class="text-[10px] text-app-textDisabled">bytea(32)</span>
+</div>
+</div>
+</div>
+<div class="pt-2.5 mt-2 border-t border-[#202A36] flex items-center justify-between text-[10px] font-mono">
+<span class="text-app-textMeta">Append-Only</span>
+<span class="text-app-textDisabled">SHA-256 Digest</span>
+</div>
+</div>
+</div>
+<!-- Visual Relationship Connector Bar -->
+<div class="bg-[#111821] border border-[#202A36] rounded-md px-4 py-2.5 flex items-center justify-center font-mono text-xs">
+<div class="flex items-center gap-3 text-app-textMeta">
+<span class="text-app-textSecondary font-medium">User</span>
+<span class="text-[#6EA8FE] font-sans">── 1:N (owns) ──›</span>
+<span class="text-app-textPrimary font-semibold px-2 py-0.5 rounded bg-[#151E29] border border-[#202A36]">Order</span>
+<span class="text-[#6EA8FE] font-sans">── 1:1 (records) ──›</span>
+<span class="text-app-textSecondary font-medium">PaymentLedger</span>
+</div>
+</div>
+</div>
+</section>
+<!-- QUESTION 2: WHY IS IT STRUCTURED THIS WAY? (Design Intent Section) -->
+<section class="bg-[#111821] border border-[#202A36] rounded-md p-5 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-mono uppercase tracking-wider text-app-textMeta font-semibold">Design Intent</span>
+<span class="text-app-textDisabled">/</span>
+<h3 class="text-base font-medium text-app-textPrimary">Isolation Rationale</h3>
+</div>
+<span class="px-2 py-0.5 rounded bg-[#9B8AFB]/10 border border-[#9B8AFB]/30 text-[#9B8AFB] font-mono text-[11px]">
+              Zero Mutability on Financial Records
+            </span>
+</div>
+<p class="text-sm text-app-textSecondary leading-relaxed">
+<span class="text-app-textPrimary font-medium">Why isolate PaymentLedger from Orders?</span> Mutating order status (e.g. <code class="font-mono text-xs text-app-textPrimary bg-[#0D1117] px-1 py-0.5 rounded border border-[#202A36]">PENDING</code> → <code class="font-mono text-xs text-app-textPrimary bg-[#0D1117] px-1 py-0.5 rounded border border-[#202A36]">PAID</code> → <code class="font-mono text-xs text-app-textPrimary bg-[#0D1117] px-1 py-0.5 rounded border border-[#202A36]">FULFILLED</code>) requires row-level locking. Isolating financial entries into an append-only ledger eliminates lock contention on high-frequency transactions and satisfies SOC2 audit requirements via cryptographic hash validation.
+          </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+<div class="bg-[#0D1117] border border-[#202A36] rounded p-3 flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-xs text-app-textSecondary font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#6EA8FE]"></span>
+<span>Operational Entity: Order</span>
+</div>
+<p class="text-xs text-app-textMeta leading-normal">Allows high concurrency updates to state machines, shipment references, and customer metadata without touching financial ledger locks.</p>
+</div>
+<div class="bg-[#0D1117] border border-[#202A36] rounded p-3 flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-xs text-app-textSecondary font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#49C58A]"></span>
+<span>Financial Entity: PaymentLedger</span>
+</div>
+<p class="text-xs text-app-textMeta leading-normal">Strictly append-only. Compensating transactions record refunds or reversals without destructive updates to previous entries.</p>
+</div>
+</div>
+</section>
+<!-- QUESTION 3: WHAT MUST ALWAYS REMAIN TRUE? (Architecture Invariant & Transactional Guarantee) -->
+<section class="bg-[#111821] border border-[#202A36] rounded-md p-5 flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded bg-[#49C58A]"></span>
+<span class="text-xs font-mono uppercase tracking-wider font-semibold text-[#49C58A]">INVARIANT</span>
+<span class="text-app-textDisabled">·</span>
+<h3 class="text-base font-medium text-app-textPrimary">Append-Only Financial Idempotency</h3>
+</div>
+<p class="text-sm text-app-textPrimary leading-relaxed">
+            When an Order transitions through state changes, prior financial ledger rows are never updated in-place. Compensating ledger transactions are created instead, preserving cryptographic chaining.
+          </p>
+<div class="bg-[#0D1117] border border-[#202A36] rounded p-3 flex items-start gap-2.5">
+<span class="material-symbols-outlined text-[16px] text-[#49C58A] shrink-0 mt-0.5">verified</span>
+<p class="text-xs text-app-textSecondary leading-relaxed">
+              Enforced at database schema level via PostgreSQL trigger constraints and ORM frozen immutability decorators. Prevents race conditions during webhook replay and asynchronous payment notification bursts.
+            </p>
+</div>
+</section>
+<!-- BOTTOM NAVIGATION: RESTRAINED AND SECONDARY -->
+<nav class="pt-4 border-t border-[#202A36] flex items-center justify-between pb-8">
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-app-textMeta hover:text-app-textSecondary transition-colors text-xs font-medium">
+<span class="material-symbols-outlined text-[15px]">arrow_back</span>
+<span>Previous: 01. System Architecture</span>
+</button>
+<div class="flex items-center gap-1 font-mono text-[11px] text-app-textDisabled">
+<span>Estimated read: 3 min</span>
+</div>
+<button class="flex items-center gap-2 px-3.5 py-1.5 bg-[#151E29] hover:bg-[#1f2d3d] border border-[#6EA8FE] text-[#6EA8FE] hover:text-[#8DBBFF] rounded-md text-xs font-medium transition-colors">
+<span>Next: 03. API Gateway &amp; Ingress</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</nav>
+</main>
+<!-- RIGHT INSPECTOR: CALM EVIDENCE PANEL (width ~380px) -->
+<aside class="w-full lg:w-[380px] shrink-0 sticky top-[72px] self-start flex flex-col">
+<div class="bg-[#0D1117] border border-[#202A36] rounded-lg flex flex-col shadow-sm overflow-hidden">
+<!-- Header -->
+<div class="p-4 border-b border-[#202A36] flex flex-col gap-1 bg-[#0D1117]">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono uppercase tracking-wider text-app-textMeta font-semibold">ARCHITECTURE SPECIFICATION</span>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#49C58A]"></span>
+<span class="text-[10px] font-mono text-[#49C58A]">Verified</span>
+</div>
+</div>
+<h3 class="text-base font-medium text-app-textPrimary">Order &amp; PaymentLedger Linkage</h3>
+<div class="flex items-center justify-between text-xs text-app-textMeta font-mono mt-1">
+<span>packages/models/ledger.py</span>
+<a class="flex items-center gap-1 hover:text-app-textSecondary transition-colors" href="#">
+<span>View in Git</span>
+<span class="material-symbols-outlined text-[12px]">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- Inspector Content Body -->
+<div class="p-4 flex flex-col gap-4 text-xs font-sans">
+<!-- 1. Why this exists -->
+<div class="flex flex-col gap-1.5">
+<span class="text-[10px] font-mono uppercase tracking-wider text-app-textMeta font-semibold">Architecture Context</span>
+<p class="text-app-textSecondary leading-relaxed">
+                Separating transactional mutations from the audit log isolates high-velocity row operations and guarantees immutable compliance records with deterministic rollback handling.
+              </p>
+</div>
+<!-- 2. Implementation Evidence (Code Block) -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[10px] font-mono text-app-textMeta">
+<span>IMPLEMENTATION EVIDENCE</span>
+<span class="text-app-textDisabled">Python / Pydantic</span>
+</div>
+<div class="bg-[#080B10] border border-[#202A36] rounded-md p-3 font-mono text-xs overflow-x-auto text-app-textSecondary leading-5">
+<pre class="whitespace-pre"><code><span class="text-app-textMeta">class</span> <span class="text-app-textPrimary font-semibold">PaymentLedger</span>(BaseModel):
+    id: UUID = Field(default_factory=uuid4)
+    order_id: UUID = Field(foreign_key=<span class="text-app-textMeta">"orders.id"</span>)
+    amount_cents: <span class="text-[#6EA8FE]">int</span>
+    tamper_hash: <span class="text-[#6EA8FE]">bytes</span>
+    
+    <span class="text-app-textMeta">class</span> <span class="text-app-textPrimary font-semibold">Config</span>:
+        frozen = <span class="text-[#49C58A]">True</span>  <span class="text-app-textDisabled"># Enforces append-only immutability</span></code></pre>
+</div>
+</div>
+<!-- 3. Guarantee Badge & Evidence -->
+<div class="bg-[#111821] border border-[#202A36] rounded-md p-3 flex flex-col gap-1.5">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#49C58A]"></span>
+<span class="font-mono text-[11px] font-semibold text-app-textPrimary">AST Verified · Schema Level Invariant</span>
+</div>
+<p class="text-[11px] text-app-textSecondary leading-relaxed">
+                Cryptographic hash validation matches SHA-256 block digest. In-memory and persisted states undergo automatic parity verification on each transaction boundary.
+              </p>
+</div>
+<!-- 4. Related Topics / Evidence Queries -->
+<div class="flex flex-col gap-2 pt-1 border-t border-[#202A36]">
+<span class="font-mono text-[10px] uppercase tracking-wider text-app-textMeta font-semibold">Related Evidence Queries</span>
+<div class="flex flex-col gap-1.5 font-sans">
+<button class="p-2 rounded bg-[#111821] border border-[#202A36] text-app-textSecondary hover:text-app-textPrimary hover:border-[#2A3746] transition-colors text-left flex items-center justify-between group">
+<span class="text-[11px]">How are refund rollbacks reconciled in ledger?</span>
+<span class="material-symbols-outlined text-[13px] text-app-textDisabled group-hover:text-app-textSecondary transition-colors">arrow_forward</span>
+</button>
+<button class="p-2 rounded bg-[#111821] border border-[#202A36] text-app-textSecondary hover:text-app-textPrimary hover:border-[#2A3746] transition-colors text-left flex items-center justify-between group">
+<span class="text-[11px]">Benchmark: Append-only write throughput vs row locks</span>
+<span class="material-symbols-outlined text-[13px] text-app-textDisabled group-hover:text-app-textSecondary transition-colors">arrow_forward</span>
+</button>
+<button class="p-2 rounded bg-[#111821] border border-[#202A36] text-app-textSecondary hover:text-app-textPrimary hover:border-[#2A3746] transition-colors text-left flex items-center justify-between group">
+<span class="text-[11px]">RFC #104: Domain boundary isolation guidelines</span>
+<span class="material-symbols-outlined text-[13px] text-app-textDisabled group-hover:text-app-textSecondary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Filter / Status Bar -->
+<div class="p-3 bg-[#0D1117] border-t border-[#202A36] flex items-center justify-between text-[11px] font-mono text-app-textDisabled">
+<span class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#49C58A]"></span>
+              Symbol Indexer Active
+            </span>
+<span>Esc to blur</span>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</body></html>

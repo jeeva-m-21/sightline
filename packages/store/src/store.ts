@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import { Edge, Entity, EntityState, Snapshot } from '@sightline/core';
-import { FeatureCluster } from '@sightline/adapter-nextjs';
+import { FeatureCluster, RepoFileNode } from '@sightline/adapter-nextjs';
 import { SCHEMA_SQL } from './schema.js';
 
 export class SightlineStore {
@@ -21,7 +21,8 @@ export class SightlineStore {
     entities: Entity[],
     states: EntityState[],
     edges: Edge[],
-    clusters: FeatureCluster[]
+    clusters: FeatureCluster[],
+    projectTree?: RepoFileNode
   ): void {
     const insertSnapshot = this.db.prepare(`
       INSERT OR REPLACE INTO snapshot (id, repo_id, git_sha, parent_id, kind, created_at)
@@ -49,6 +50,11 @@ export class SightlineStore {
     const insertCluster = this.db.prepare(`
       INSERT OR REPLACE INTO feature_cluster (id, snapshot_id, name, description, routes_json, files_json)
       VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    const insertTree = this.db.prepare(`
+      INSERT OR REPLACE INTO project_tree (snapshot_id, tree_json)
+      VALUES (?, ?)
     `);
 
     // Run transaction
@@ -100,9 +106,26 @@ export class SightlineStore {
           JSON.stringify(c.filePaths)
         );
       }
+
+      if (projectTree) {
+        insertTree.run(snapshot.id, JSON.stringify(projectTree));
+      }
     });
 
     transaction();
+  }
+
+  public getProjectTree(snapshotId: string): RepoFileNode | null {
+    const row = this.db
+      .prepare('SELECT tree_json FROM project_tree WHERE snapshot_id = ?')
+      .get(snapshotId) as { tree_json: string } | undefined;
+
+    if (!row || !row.tree_json) return null;
+    try {
+      return JSON.parse(row.tree_json) as RepoFileNode;
+    } catch {
+      return null;
+    }
   }
 
   public getLatestSnapshot(repoId?: string): Snapshot | null {

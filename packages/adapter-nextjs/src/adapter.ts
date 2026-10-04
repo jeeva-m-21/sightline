@@ -3,12 +3,14 @@ import path from 'node:path';
 import { AstExtractor, ExtractedFile } from '@sightline/extractor';
 import { FeatureClusterer } from './clusterer.js';
 import { resolveNextRoute } from './routes.js';
-import { FeatureCluster, NextRouteInfo } from './types.js';
+import { buildProjectTree } from './tree.js';
+import { FeatureCluster, NextRouteInfo, RepoFileNode } from './types.js';
 
 export interface NextJsAnalysisResult {
   routes: NextRouteInfo[];
   clusters: FeatureCluster[];
   extractedFiles: ExtractedFile[];
+  projectTree: RepoFileNode;
 }
 
 export class NextJsAdapter {
@@ -42,11 +44,13 @@ export class NextJsAdapter {
     }
 
     const clusters = this.clusterer.clusterRoutes(routes);
+    const projectTree = await buildProjectTree(projectRoot, routes, extractedFiles);
 
     return {
       routes,
       clusters,
       extractedFiles,
+      projectTree,
     };
   }
 

@@ -142,7 +142,7 @@ export async function runIndexingPipeline(projectDir: string, dbPath: string): P
   }
 
   // Save in store
-  store.saveSnapshot(snapshot, entities, entityStates, edges, analysis.clusters);
+  store.saveSnapshot(snapshot, entities, entityStates, edges, analysis.clusters, analysis.projectTree);
   store.close();
 
   const totalRoutes = analysis.clusters.reduce((acc, c) => acc + c.routes.length, 0);

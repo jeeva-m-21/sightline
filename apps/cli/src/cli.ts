@@ -96,7 +96,7 @@ program
     const port = parseInt(options.port, 10) || 3111;
 
     try {
-      const instance = await startViewerServer(store, port);
+      const instance = await startViewerServer(store, projectDir, port);
       console.log('\n' + chalk.bold.green('✔ Sightline Product Map is running at:') + ' ' + chalk.cyan.underline(instance.url));
       console.log(chalk.dim('Press Ctrl+C to stop the viewer server.\n'));
 

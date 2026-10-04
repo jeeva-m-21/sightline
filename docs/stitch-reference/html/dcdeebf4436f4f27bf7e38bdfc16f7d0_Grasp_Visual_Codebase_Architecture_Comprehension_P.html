@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary": "#ffb783", "on-primary-fixed-variant": "#2f2ebe", "error-container": "#93000a", "on-secondary": "#490080", "on-error-container": "#ffdad6", "primary": "#c0c1ff", "outline-variant": "#464554", "secondary-container": "#6f00be", "primary-container": "#8083ff", "on-primary": "#1000a9", "on-error": "#690005", "on-secondary-container": "#d6a9ff", "inverse-primary": "#494bd6", "secondary-fixed": "#f0dbff", "inverse-surface": "#e2e2e8", "on-tertiary-fixed": "#301400", "on-secondary-fixed-variant": "#6900b3", "on-primary-container": "#0d0096", "tertiary-fixed": "#ffdcc5", "surface-container-low": "#1a1c20", "surface": "#111318", "surface-bright": "#37393e", "on-tertiary-container": "#452000", "tertiary-fixed-dim": "#ffb783", "inverse-on-surface": "#2f3035", "on-tertiary": "#4f2500", "background": "#111318", "outline": "#908fa0", "primary-fixed": "#e1e0ff", "surface-tint": "#c0c1ff", "surface-dim": "#111318", "on-surface": "#e2e2e8", "surface-container-lowest": "#0c0e12", "tertiary-container": "#d97721", "error": "#ffb4ab", "surface-container-high": "#282a2e", "secondary-fixed-dim": "#ddb7ff", "surface-container-highest": "#333539", "primary-fixed-dim": "#c0c1ff", "secondary": "#ddb7ff", "surface-variant": "#333539", "surface-container": "#1e2024", "on-background": "#e2e2e8", "on-primary-fixed": "#07006c", "on-secondary-fixed": "#2c0051", "on-tertiary-fixed-variant": "#703700", "on-surface-variant": "#c7c4d7" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-sm": "0.5rem", "space-md": "0.75rem", "gutter-sm": "0.5rem", "space-xl": "2rem", "gutter": "1rem", "space-xs": "0.25rem", "space-lg": "1.25rem", "margin-mobile": "0.75rem", "margin": "1.5rem" }, "fontFamily": { "headline-xl-mobile": ["Geist"], "body-lg": ["Geist"], "code-sm": ["JetBrains Mono"], "headline-md": ["Geist"], "label-sm": ["JetBrains Mono"], "headline-xl": ["Geist"], "headline-lg": ["Geist"], "headline-sm": ["Geist"], "label-md": ["JetBrains Mono"], "body-md": ["Geist"], "body-sm": ["Geist"], "code-lg": ["JetBrains Mono"] }, "fontSize": { "headline-xl-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-lg": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "code-sm": ["11px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-md": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "500" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-sm": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }], "body-md": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "code-lg": ["13px", { "lineHeight": "20px", "fontWeight": "500" }] } } } };</script></head><body class="bg-background font-body-md text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/85 backdrop-blur-md border-b border-outline-variant/30"><div class="h-16 max-w-7xl mx-auto px-margin flex items-center justify-between gap-gutter"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group" data-path="home" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/40 group-hover:ring-primary transition-all" src="https://lh3.googleusercontent.com/aida/AEtjO1U1P6TijRQKiq12rJSCZsjd9-z5j56-kHxPWWclV12JomWXo-8irgMvN5bh1af7K18-lSA_CWS5RC0m2KHaWjmzlOX3BGKR0EBoshIY9ddj9fUxAGdyVXzzUGOdc6drgwrTqs8qNcWyj43n6poKP5aGHPlDZxy3iSO3hvPeK4SDR2LI9V2RF1Sz5LcbOYCjIYmnJwNMDrfIL1HnyfJLGAlqhFxh49U8SPP4ARDDvPNq59tzHLpK5LYhGs0BkxvJqkaWaRhWLE4a76c"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">Grasp</span><span class="hidden sm:inline-block font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant/30 uppercase">v2.4</span></a><nav class="hidden lg:flex items-center gap-space-md" data-active-classes="text-on-surface font-semibold"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface px-space-xs py-1 transition-colors" data-path="features" href="#">Features</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface px-space-xs py-1 transition-colors" data-path="how-it-works" href="#">How it Works</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface px-space-xs py-1 transition-colors" data-path="architecture-graph" href="#">Architecture Graph</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface px-space-xs py-1 transition-colors" data-path="presentation-mode" href="#">Presentation Mode</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface px-space-xs py-1 transition-colors" data-path="documentation" href="#">Docs</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface px-space-xs py-1 transition-colors" data-path="pricing" href="#">Pricing</a></nav></div><div class="flex items-center gap-space-sm"><a class="hidden sm:inline-flex items-center px-space-md py-1.5 rounded text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="login" href="#">Sign in</a><a class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary-container hover:bg-primary font-headline-sm text-headline-sm transition-all shadow-[0_0_0_1px_rgba(192,193,255,0.25)] hover:shadow-[0_0_16px_rgba(128,131,255,0.4)]" data-path="workspace" href="#"><span class="material-symbols-outlined text-[16px]">terminal</span><span>Launch Workspace</span></a></div></div></header><main class="w-full pt-16 bg-background"><div class="flex flex-col w-full">
+<!-- Interactive Canvas Background & Ambient Glow -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[480px] bg-gradient-to-b from-primary-container/15 via-secondary-container/10 to-transparent blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-48 right-12 w-[340px] h-[340px] bg-primary/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+<!-- HERO SECTION -->
+<section class="max-w-7xl mx-auto px-margin pt-space-xl pb-space-lg flex flex-col items-center text-center">
+<!-- Status Badge -->
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high shadow-sm hover:bg-surface-container-highest transition-colors cursor-pointer group mb-space-lg">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary -ml-2.5"></span>
+<span class="font-label-sm text-label-sm text-primary tracking-wide uppercase">v0.9.4 Public Beta</span>
+<span class="text-outline-variant">•</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Understand any codebase in seconds</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</div>
+<!-- Main Typography Hierarchy -->
+<h1 class="font-headline-xl text-headline-xl text-on-surface max-w-4xl tracking-tight sm:leading-tight">
+        Understand any codebase at a glance.<br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary-fixed to-primary-container">Present it with confidence.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-space-md mb-space-xl">
+        Grasp parses your git repository into interactive execution flows, relational schema topologies, and plain-English mental models. No AI hallucinations, no complex setup. Just pure architectural clarity.
+      </p>
+<!-- Primary Action Row -->
+<div class="flex flex-wrap items-center justify-center gap-space-md w-full max-w-md">
+<a class="flex-1 min-w-[200px] inline-flex items-center justify-center gap-space-xs px-space-lg py-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-fixed transition-all shadow-lg shadow-primary-container/25" href="#demo-workbench">
+<span class="material-symbols-outlined text-[18px]">account_tree</span>
+<span>Connect Repository</span>
+<kbd class="ml-1.5 px-1.5 py-0.5 rounded bg-on-primary/15 text-on-primary font-code-sm text-code-sm">⌘K</kbd>
+</a>
+<button class="flex-1 min-w-[170px] inline-flex items-center justify-center gap-space-xs px-space-lg py-3 rounded bg-surface-container-high text-on-surface font-headline-sm text-headline-sm hover:bg-surface-container-highest transition-colors shadow-sm" id="btn-run-live-demo" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">play_circle</span>
+<span>Try Live Demo</span>
+</button>
+</div>
+<!-- Quickstart CLI Chip -->
+<div class="mt-space-lg flex items-center gap-space-xs bg-surface-container-low px-space-md py-1.5 rounded-lg shadow-sm">
+<span class="font-code-sm text-code-sm text-outline">$</span>
+<code class="font-code-sm text-code-sm text-primary">npx grasp@latest init</code>
+<button class="ml-space-xs p-1 text-on-surface-variant hover:text-on-surface transition-colors" id="copy-hero-cli" title="Copy CLI install command" type="button">
+<span class="material-symbols-outlined text-[15px]" id="copy-hero-icon">content_copy</span>
+</button>
+</div>
+<!-- HERO WORKSPACE CONTAINER: Tripartite Interactive Visualizer -->
+<div class="w-full mt-space-xl rounded-xl bg-surface-container-lowest shadow-2xl p-space-xs text-left relative group" id="demo-workbench">
+<!-- Floating HUD Pill -->
+<div class="absolute -top-3.5 left-8 z-30 flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container-highest shadow-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-semibold">Deterministic Parser</span>
+<span class="text-outline-variant font-code-sm text-[10px]">•</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Zero Dual-Write Hazard Verified</span>
+</div>
+<!-- Workbench App Header Bar -->
+<div class="flex items-center justify-between px-space-md py-2 bg-surface-container-low rounded-t-lg">
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+</div>
+<div class="h-4 w-px bg-surface-variant mx-1"></div>
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary">folder_open</span>
+<span class="text-on-surface font-medium">acme-corp/checkout-pipeline</span>
+<span class="text-outline">/</span>
+<span class="text-secondary">main</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-1 rounded bg-surface-container text-on-surface font-code-sm text-code-sm hover:bg-surface-container-high transition-colors flex items-center gap-1" id="btn-export-svg" type="button">
+<span class="material-symbols-outlined text-[13px] text-primary">download</span>
+<span>Export SVG</span>
+</button>
+<button class="px-space-sm py-1 rounded bg-surface-container text-on-surface font-code-sm text-code-sm hover:bg-surface-container-high transition-colors flex items-center gap-1" id="btn-export-mermaid" type="button">
+<span class="material-symbols-outlined text-[13px] text-secondary">code_blocks</span>
+<span>Mermaid.js</span>
+</button>
+<div class="px-space-xs py-1 rounded bg-secondary-container/40 text-on-secondary-container font-label-sm text-label-sm">
+              PRESS 'F' PRESENTER
+            </div>
+</div>
+</div>
+<!-- Tripartite Workspace Main Body -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xs p-space-xs bg-surface-container-lowest">
+<!-- Column 1: Directory AST Explorer (lg:col-span-3) -->
+<div class="hidden lg:flex flex-col lg:col-span-3 bg-surface-container-low rounded p-space-sm">
+<div class="flex items-center justify-between pb-space-xs mb-space-xs">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase">Repository Topology</span>
+<span class="font-code-sm text-code-sm text-primary">14 files indexed</span>
+</div>
+<div class="space-y-1 font-code-sm text-code-sm text-on-surface-variant">
+<div class="flex items-center gap-space-xs py-1 px-1.5 rounded hover:bg-surface-container text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-[14px] text-outline">expand_more</span>
+<span class="material-symbols-outlined text-[14px] text-primary">folder</span>
+<span>services/</span>
+</div>
+<div class="ml-4 space-y-0.5">
+<div class="flex items-center gap-space-xs py-1 px-1.5 rounded bg-surface-container-high text-primary font-medium cursor-pointer">
+<span class="material-symbols-outlined text-[13px]">code</span>
+<span>order_service.py</span>
+<span class="ml-auto w-1.5 h-1.5 rounded-full bg-primary"></span>
+</div>
+<div class="flex items-center gap-space-xs py-1 px-1.5 rounded hover:bg-surface-container text-on-surface-variant cursor-pointer">
+<span class="material-symbols-outlined text-[13px]">code</span>
+<span>auth_middleware.py</span>
+</div>
+<div class="flex items-center gap-space-xs py-1 px-1.5 rounded hover:bg-surface-container text-on-surface-variant cursor-pointer">
+<span class="material-symbols-outlined text-[13px]">code</span>
+<span>outbox_producer.py</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs py-1 px-1.5 rounded hover:bg-surface-container text-on-surface cursor-pointer mt-space-xs">
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="material-symbols-outlined text-[14px] text-primary">folder</span>
+<span>schemas/</span>
+</div>
+<div class="flex items-center gap-space-xs py-1 px-1.5 rounded hover:bg-surface-container text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="material-symbols-outlined text-[14px] text-primary">folder</span>
+<span>db/migrations/</span>
+</div>
+</div>
+<!-- AST Parsing Health Sub-card -->
+<div class="mt-auto pt-space-md">
+<div class="bg-surface-container p-space-sm rounded">
+<div class="flex items-center justify-between font-label-sm text-label-sm mb-1">
+<span class="text-outline uppercase tracking-wider">AST Parity</span>
+<span class="text-primary font-bold">100% Deterministic</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-full"></div>
+</div>
+<p class="font-code-sm text-[10px] text-outline mt-1.5">No dangling async futures detected.</p>
+</div>
+</div>
+</div>
+<!-- Column 2: Visual Execution Canvas (lg:col-span-5) -->
+<div class="lg:col-span-5 bg-surface rounded p-space-md flex flex-col justify-between relative overflow-hidden">
+<!-- Grid Lines Canvas Indicator -->
+<div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#8083ff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+<div class="relative z-10 flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-outline uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px] text-primary">route</span>
+<span>Dynamic Execution Flow</span>
+</div>
+<span class="font-code-sm text-code-sm text-secondary px-2 py-0.5 rounded bg-surface-container-high">POST /api/v1/orders/checkout</span>
+</div>
+<!-- Interactive 4-Hop Pipeline Graph -->
+<div class="relative z-10 my-space-md flex flex-col gap-space-sm">
+<!-- Hop 1 -->
+<div class="hop-card p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-all cursor-pointer shadow-sm group active" data-step="0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-primary/20 text-primary font-semibold">01</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">API Ingress</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">FastAPI Router</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Accepts and validates signed idempotency key &amp; client request token.</p>
+</div>
+<!-- Connecting Edge 1 -->
+<div class="flex justify-center -my-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+</div>
+<!-- Hop 2 -->
+<div class="hop-card p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-all cursor-pointer shadow-sm group" data-step="1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-surface-variant text-on-surface-variant font-semibold">02</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Session Authorization</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">JWT + Scope Guard</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Extracts actor claims. Rejects expired credentials before hitting core DB.</p>
+</div>
+<!-- Connecting Edge 2 -->
+<div class="flex justify-center -my-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+</div>
+<!-- Hop 3 -->
+<div class="hop-card p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-all cursor-pointer shadow-sm group" data-step="2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-surface-variant text-on-surface-variant font-semibold">03</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Pessimistic Order Engine</span>
+</div>
+<span class="font-code-sm text-code-sm text-primary">Postgres TX</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Executes <code class="text-primary font-code-sm text-[11px]">SELECT FOR UPDATE</code> on inventory to prevent concurrent stock depletion.</p>
+</div>
+<!-- Connecting Edge 3 -->
+<div class="flex justify-center -my-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+</div>
+<!-- Hop 4 -->
+<div class="hop-card p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-all cursor-pointer shadow-sm group" data-step="3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-surface-variant text-on-surface-variant font-semibold">04</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Kafka Outbox Enqueue</span>
+</div>
+<span class="font-code-sm text-code-sm text-secondary">Event Broker</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Appends event into transactional outbox ledger; eliminates dual-write hazard.</p>
+</div>
+</div>
+<div class="relative z-10 flex items-center justify-between text-outline font-code-sm text-[11px] pt-space-xs">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Live Latency: 18.4ms</span>
+<span>Execution Depth: 4 hops</span>
+</div>
+</div>
+<!-- Column 3: Synchronized Code & Invariant Drawer (lg:col-span-4) -->
+<div class="lg:col-span-4 bg-surface-container-low rounded p-space-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-primary">
+<span class="material-symbols-outlined text-[14px]">data_object</span>
+<span id="active-file-label">services/order_service.py:42</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Runtime Sync</span>
+</div>
+<!-- Synchronized Code Block -->
+<div class="bg-surface-container-lowest p-space-sm rounded font-code-sm text-code-sm overflow-x-auto shadow-inner text-on-surface-variant space-y-1">
+<div class="text-outline italic"># Grasp AST Synchronized Scope</div>
+<div><span class="text-primary-container">async def</span> <span class="text-secondary">create_order_atomic</span>(ctx, payload):</div>
+<div class="pl-3 text-outline"># Step 3 Execution Snapshot</div>
+<div class="pl-3 bg-primary-container/10 text-primary py-0.5 rounded"><span class="text-primary-container">async with</span> ctx.db.transaction():</div>
+<div class="pl-6">stock = <span class="text-primary-container">await</span> inventory.lock_for_update(payload.sku)</div>
+<div class="pl-6"><span class="text-primary-container">if</span> stock &lt; payload.qty:</div>
+<div class="pl-9 text-error"><span class="text-primary-container">raise</span> InsufficientStockError()</div>
+<div class="pl-6">record = <span class="text-primary-container">await</span> orders.insert(payload)</div>
+<div class="pl-6"><span class="text-primary-container">await</span> outbox.queue_event(<span class="text-secondary">"order_committed"</span>, record.id)</div>
+<div class="pl-3"><span class="text-primary-container">return</span> record.id</div>
+</div>
+<!-- Plain-English Invariant Context Card -->
+<div class="mt-space-sm p-space-sm bg-surface rounded shadow-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Plain-English Invariant</span>
+<p class="font-body-sm text-body-sm text-on-surface mt-1">
+                  The order engine guarantees that inventory depletion and order record insertions share a single database transaction boundary.
+                </p>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high font-code-sm text-[10px] text-primary">Isolation: REPEATABLE READ</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high font-code-sm text-[10px] text-on-surface-variant">Locking: Pessimistic</span>
+</div>
+</div>
+</div>
+<!-- Instant Mermaid Export Preview -->
+<div class="pt-space-sm">
+<div class="bg-surface-container p-space-xs rounded flex items-center justify-between font-code-sm text-code-sm">
+<span class="text-outline truncate">graph TD; Ingress--&gt;Auth--&gt;DB--&gt;Kafka;</span>
+<button class="text-primary hover:text-primary-fixed ml-2 font-medium" id="copy-quick-mermaid" type="button">Copy</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SOCIAL PROOF / STACK CHIPS -->
+<section class="max-w-7xl mx-auto px-margin py-space-xl">
+<p class="font-label-sm text-label-sm text-outline text-center uppercase tracking-widest mb-space-md">
+        Trusted by lead engineers, founding teams, and vibecoders scaling complex systems
+      </p>
+<div class="flex flex-wrap items-center justify-center gap-space-sm opacity-85">
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">terminal</span>
+<span>FastAPI / Python</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">database</span>
+<span>PostgreSQL (AST Schema)</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">sync_alt</span>
+<span>Apache Kafka / Events</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">code</span>
+<span>TypeScript / Next.js</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">memory</span>
+<span>Rust / Tokio Crate</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">lan</span>
+<span>Go Microservices</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">token</span>
+<span>GraphQL Schemas</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-code-sm text-code-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">token</span>
+<span>Docker / Compose</span>
+</div>
+</div>
+</section>
+<!-- CORE VALUE PILLARS (3-Column Bento) -->
+<section class="max-w-7xl mx-auto px-margin py-space-xl">
+<div class="flex flex-col mb-space-lg text-center items-center">
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase font-semibold">Architectural Rigor</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mt-space-xs">
+          Built for how real software behaves at runtime
+        </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Pillar Card 1 -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-md hover:bg-surface-container transition-all flex flex-col justify-between group">
+<div>
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-space-md group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">account_tree</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">
+              Visual Mental Models, Not Gamified Courses
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+              Grasp doesn't force toy exercises. It parses your actual production code, foreign key relationships, and asynchronous job pipelines so you immediately understand what your team or AI agents just generated.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-md bg-surface-container-lowest p-space-sm rounded">
+<span class="font-code-sm text-code-sm text-secondary block font-semibold">// Continuous Topography</span>
+<span class="font-code-sm text-code-sm text-outline">Parses multi-package monorepos with zero manual manifest writing.</span>
+</div>
+</div>
+<!-- Pillar Card 2 -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-md hover:bg-surface-container transition-all flex flex-col justify-between group">
+<div>
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary mb-space-md group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">sync</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">
+              Synchronized Code &amp; Topological Graphs
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+              Click any node in your execution diagram to pinpoint the exact line in <code class="font-code-sm text-[12px] text-primary">order.py:42</code>. Inspect concurrency barriers, mutexes, and idempotency guarantees in real time.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-md bg-surface-container-lowest p-space-sm rounded">
+<span class="font-code-sm text-code-sm text-primary block font-semibold">// Bi-directional Highlighting</span>
+<span class="font-code-sm text-code-sm text-outline">File edits instantly re-render execution paths and dependency graphs.</span>
+</div>
+</div>
+<!-- Pillar Card 3 -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-md hover:bg-surface-container transition-all flex flex-col justify-between group">
+<div>
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary mb-space-md group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">slideshow</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">
+              Presentation Ready in 1-Click
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">
+              Need to walk founders, staff engineers, or enterprise auditors through your architecture? Press <kbd class="px-1 py-0.5 rounded bg-surface-container text-on-surface font-code-sm text-[11px]">F</kbd> for interactive Presentation Mode or export vector SVGs and Mermaid specs into your README.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-md bg-surface-container-lowest p-space-sm rounded">
+<span class="font-code-sm text-code-sm text-secondary block font-semibold">// Clean Vector Formats</span>
+<span class="font-code-sm text-code-sm text-outline">High-DPI diagrams with native dark-mode styling embedded.</span>
+</div>
+</div>
+</div>
+</section>
+<!-- DEEP FEATURE WALKTHROUGH -->
+<section class="max-w-7xl mx-auto px-margin py-space-xl space-y-space-xl">
+<!-- Feature 1: Deterministic 4-Hop Tracing -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+<div class="lg:col-span-5 flex flex-col gap-space-sm">
+<div class="inline-flex items-center gap-space-xs text-primary font-code-sm text-code-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">timeline</span>
+<span>RUNTIME CALL-PATH ANALYSIS</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">
+            Trace execution across services without instrumenting manual spans
+          </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Static AST parsers miss runtime dynamics; APMs drown you in noisy telemetry. Grasp extracts call trees by combining AST static graphs with runtime type contracts to give you deterministic 4-hop execution routes.
+          </p>
+<ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant mt-space-xs">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+<span>Explicit transaction boundary mapping (Commit, Rollback, Savepoints)</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+<span>Transactional Outbox pattern detection (Guarantees zero lost events)</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+<span>Input sanitization and auth scope verification per endpoint</span>
+</li>
+</ul>
+</div>
+<div class="lg:col-span-7 bg-surface-container-lowest p-space-md rounded-xl shadow-xl">
+<!-- Visual Call-Path Mockup -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<span class="font-code-sm text-code-sm text-on-surface font-semibold">FLOW: checkout_session.execute()</span>
+<span class="font-label-sm text-label-sm text-secondary px-2 py-0.5 rounded bg-secondary-container/20">DETERMINISTIC</span>
+</div>
+<!-- Visual Flow Path Diagram -->
+<div class="grid grid-cols-1 sm:grid-cols-4 gap-space-xs relative">
+<div class="bg-surface-container p-space-sm rounded text-center">
+<span class="font-label-sm text-label-sm text-outline block">STEP 01</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Router</span>
+<span class="font-code-sm text-[10px] text-primary block mt-1">Payload OK</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded text-center">
+<span class="font-label-sm text-label-sm text-outline block">STEP 02</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Auth Guard</span>
+<span class="font-code-sm text-[10px] text-secondary block mt-1">Scope: Write</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded text-center">
+<span class="font-label-sm text-label-sm text-outline block">STEP 03</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Postgres</span>
+<span class="font-code-sm text-[10px] text-primary block mt-1">Row Lock TX</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded text-center">
+<span class="font-label-sm text-label-sm text-outline block">STEP 04</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Kafka</span>
+<span class="font-code-sm text-[10px] text-secondary block mt-1">Outbox Ack</span>
+</div>
+</div>
+<!-- Terminal Output Diagnostic -->
+<div class="mt-space-md bg-surface-container-lowest p-space-sm rounded font-code-sm text-code-sm text-on-surface-variant">
+<span class="text-primary">[grasp:trace]</span> Validated 4 network transitions. 0 asynchronous dual-write hazards found in <span class="text-on-surface">packages/core/checkout.ts</span>.
+            </div>
+</div>
+</div>
+</div>
+<!-- Feature 2: Relational Schema Topology -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+<div class="lg:col-span-7 order-2 lg:order-1 bg-surface-container-lowest p-space-md rounded-xl shadow-xl">
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface">
+<span class="material-symbols-outlined text-[15px] text-primary">schema</span>
+<span>SCHEMA TOPOLOGY: LEDGER_ISOLATION</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary px-2 py-0.5 rounded bg-primary-container/20">CRYPTOGRAPHIC AUDIT</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<!-- Operational Table Card -->
+<div class="bg-surface-container p-space-sm rounded">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">orders</span>
+<span class="font-label-sm text-[10px] text-outline">MUTABLE</span>
+</div>
+<div class="font-code-sm text-code-sm space-y-1 text-on-surface-variant">
+<div class="flex justify-between"><span>id:</span><span class="text-secondary">UUID (PK)</span></div>
+<div class="flex justify-between"><span>user_id:</span><span class="text-outline">UUID (FK)</span></div>
+<div class="flex justify-between"><span>status:</span><span class="text-primary">VARCHAR</span></div>
+<div class="flex justify-between"><span>total_cents:</span><span class="text-outline">BIGINT</span></div>
+</div>
+</div>
+<!-- Immutable Ledger Card -->
+<div class="bg-surface-container p-space-sm rounded">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary">audit_ledger</span>
+<span class="font-label-sm text-[10px] text-secondary">IMMUTABLE (APPEND)</span>
+</div>
+<div class="font-code-sm text-code-sm space-y-1 text-on-surface-variant">
+<div class="flex justify-between"><span>entry_seq:</span><span class="text-primary">BIGSERIAL (PK)</span></div>
+<div class="flex justify-between"><span>order_id:</span><span class="text-outline">UUID (FK)</span></div>
+<div class="flex justify-between"><span>delta_cents:</span><span class="text-outline">BIGINT</span></div>
+<div class="flex justify-between"><span>prev_hash:</span><span class="text-secondary">CHAR(64) SHA256</span></div>
+</div>
+</div>
+</div>
+<!-- Invariant Assurance Flag -->
+<div class="mt-space-sm p-space-xs bg-surface-container-high rounded flex items-center gap-space-xs font-code-sm text-[11px] text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+<span>Foreign Key relationship verified with strict onDelete: RESTRICT semantics.</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 order-1 lg:order-2 flex flex-col gap-space-sm">
+<div class="inline-flex items-center gap-space-xs text-secondary font-code-sm text-code-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">data_table</span>
+<span>RELATIONAL INTEGRITY VERIFICATION</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">
+            Isolate operational state from immutable financial ledgers
+          </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Grasp automatically generates relational entity models from raw SQL migrations, Prisma schemas, or SQLAlchemy models. Instantly spot missing foreign key indexes, unsafe cascade deletions, or accidental ledger mutability.
+          </p>
+<div class="flex items-center gap-space-md pt-space-xs">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-primary">0ms</span>
+<span class="font-body-sm text-body-sm text-outline">Database runtime overhead</span>
+</div>
+<div class="h-8 w-px bg-surface-variant"></div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-secondary">100%</span>
+<span class="font-body-sm text-body-sm text-outline">Local-first parsing</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Feature 3: Grounded Architecture Copilot -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+<div class="lg:col-span-5 flex flex-col gap-space-sm">
+<div class="inline-flex items-center gap-space-xs text-primary font-code-sm text-code-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">psychology</span>
+<span>REPO-GROUNDED KNOWLEDGE BASE</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">
+            Ask Grasp AI: An architectural copilot that never invents files
+          </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Unlike generic chatbots that guess how your code runs, Grasp AI traverses the indexed AST graph before answering. Every response includes real, clickable file citations with exact line ranges.
+          </p>
+<div class="flex items-center gap-space-xs text-outline font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+<span>Strict zero-telemetry guarantee: your source code stays local.</span>
+</div>
+</div>
+<div class="lg:col-span-7 bg-surface-container-lowest p-space-md rounded-xl shadow-xl">
+<div class="bg-surface-container-low rounded-lg p-space-md space-y-space-sm">
+<!-- Simulated Prompt Query -->
+<div class="flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-code-sm text-[11px] shrink-0">
+                U
+              </div>
+<div class="bg-surface-container p-space-sm rounded-lg font-body-sm text-body-sm text-on-surface w-full">
+                "Where does the webhook retry backoff happen, and what prevents replay attacks?"
+              </div>
+</div>
+<!-- Simulated Grasp Assistant Grounded Reply -->
+<div class="flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-code-sm text-[11px] shrink-0">
+                G
+              </div>
+<div class="bg-surface-container-high p-space-sm rounded-lg font-body-sm text-body-sm text-on-surface w-full space-y-2">
+<p>
+                  Webhook retries are handled in <span class="px-1.5 py-0.5 rounded bg-surface-container-lowest font-code-sm text-primary">services/webhook_dispatcher.py:84</span> using exponential backoff with a factor of 2.5.
+                </p>
+<div class="p-space-xs rounded bg-surface-container-lowest font-code-sm text-[11px] text-on-surface-variant">
+<span class="text-secondary">Citation #1:</span> <code class="text-on-surface">redis.set(f"idemp:{token}", 1, ex=86400, nx=True)</code>
+</div>
+<p class="text-on-surface-variant">
+                  Replays are discarded through Redis <code class="font-code-sm text-secondary">SET NX</code> key validation with 24-hour expiration before downstream handlers execute.
+                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- VIBECODER & BUILDER CALLOUT (Specialized Use Case) -->
+<section class="max-w-7xl mx-auto px-margin py-space-xl">
+<div class="rounded-xl bg-gradient-to-r from-surface-container-low via-surface-container to-surface-container-low p-space-xl shadow-lg relative overflow-hidden">
+<div class="relative z-10 max-w-3xl">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold">Built for Vibecoders &amp; Senior Architects</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mt-space-xs">
+            Using Cursor, Claude, or Copilot? Regain your architectural sovereignty.
+          </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-space-sm">
+            AI can generate 10,000 lines of code in minutes. Grasp ensures you actually understand how those files link together before pushing to production. Verify dependencies, eliminate circular imports, and review generated systems with spatial visual intuition.
+          </p>
+<div class="mt-space-md flex flex-wrap items-center gap-space-sm font-code-sm text-code-sm">
+<span class="px-space-sm py-1 rounded bg-surface-container-highest text-primary">No more sprawling unseen bugs</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-highest text-secondary">Instant agentic code audits</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-highest text-on-surface">100% Deterministic mental models</span>
+</div>
+</div>
+</div>
+</section>
+<!-- INTERACTIVE COMMAND PALETTE & EXTENSION BANNER -->
+<section class="max-w-7xl mx-auto px-margin py-space-xl">
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-md flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[28px]">extension</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Work natively in your existing editor</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              Instant extensions for VS Code, Cursor, and JetBrains. Local-first daemon with GitHub Action parity checks in CI.
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full md:w-auto justify-end">
+<button class="px-space-md py-2 rounded bg-surface-container-high text-on-surface font-headline-sm text-headline-sm hover:bg-surface-container-highest transition-colors" type="button">
+            Install VS Code Plugin
+          </button>
+<button class="px-space-md py-2 rounded bg-surface-container-high text-on-surface font-headline-sm text-headline-sm hover:bg-surface-container-highest transition-colors" type="button">
+            GitHub Action CI
+          </button>
+</div>
+</div>
+</section>
+<!-- BOTTOM CTA SECTION -->
+<section class="max-w-7xl mx-auto px-margin py-space-xl text-center">
+<div class="max-w-3xl mx-auto flex flex-col items-center">
+<h2 class="font-headline-xl text-headline-xl text-on-surface">
+          Stop guessing what your code is doing.
+        </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-space-sm mb-space-lg max-w-xl">
+          Turn hundreds of scattered files into an interactive, exportable architecture map in under 60 seconds.
+        </p>
+<div class="flex flex-wrap items-center justify-center gap-space-md w-full max-w-md">
+<a class="flex-1 min-w-[200px] inline-flex items-center justify-center gap-space-xs px-space-lg py-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-fixed transition-all shadow-lg shadow-primary/20" href="#demo-workbench">
+<span>Get Started Free</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="flex-1 min-w-[170px] inline-flex items-center justify-center gap-space-xs px-space-lg py-3 rounded bg-surface-container-high text-on-surface font-headline-sm text-headline-sm hover:bg-surface-container-highest transition-colors shadow-sm" data-path="documentation" href="#">
+<span>Read Documentation</span>
+</a>
+</div>
+<!-- Free Tier Guarantee Metadata -->
+<div class="flex flex-wrap items-center justify-center gap-space-md mt-space-lg font-code-sm text-code-sm text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary">check</span>
+<span>Unlimited public repositories</span>
+</span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary">check</span>
+<span>Instant AST parsing</span>
+</span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary">check</span>
+<span>Free vector SVG &amp; Mermaid exports</span>
+</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Interactive Client-side Script -->
+<script>
+    (function () {
+      // 1. Interactive Step Switching in Workbench Preview
+      const steps = [
+        {
+          file: "services/api_router.py:18",
+          code: `# Step 1: FastAPI Request Gateway\n@router.post("/v1/orders/checkout")\nasync def handle_checkout(req: CheckoutRequest):\n    validate_idempotency_token(req.headers)\n    return await session.dispatch(req.payload)`
+        },
+        {
+          file: "middleware/auth_guard.py:47",
+          code: `# Step 2: JWT Claims & Scope Inspector\nasync def verify_actor_token(token: str) -> ActorContext:\n    payload = jwt.decode(token, SECRET, algorithms=["RS256"])\n    assert "orders:write" in payload.scopes\n    return ActorContext(id=payload.sub)`
+        },
+        {
+          file: "services/order_service.py:42",
+          code: `# Step 3: Execution Snapshot (Postgres Transaction)\nasync with ctx.db.transaction():\n    stock = await inventory.lock_for_update(payload.sku)\n    if stock < payload.qty:\n        raise InsufficientStockError()\n    record = await orders.insert(payload)\n    await outbox.queue_event("order_committed", record.id)\n    return record.id`
+        },
+        {
+          file: "brokers/kafka_outbox.py:33",
+          code: `# Step 4: Transactional Outbox Worker\nasync def flush_outbox_queue():\n    async with db.poll_pending_events() as batch:\n        for event in batch:\n            await kafka.produce(topic="order-events", val=event.bytes)\n            event.mark_published()`
+        }
+      ];
+
+      const cards = document.querySelectorAll(".hop-card");
+      const fileLabel = document.getElementById("active-file-label");
+
+      cards.forEach((card) => {
+        card.addEventListener("click", () => {
+          cards.forEach((c) => {
+            c.classList.remove("bg-surface-container-high", "shadow-md");
+            c.classList.add("bg-surface-container");
+          });
+          card.classList.remove("bg-surface-container");
+          card.classList.add("bg-surface-container-high", "shadow-md");
+
+          const stepIdx = parseInt(card.getAttribute("data-step") || "0", 10);
+          if (fileLabel && steps[stepIdx]) {
+            fileLabel.textContent = steps[stepIdx].file;
+          }
+        });
+      });
+
+      // 2. Clipboard Quick Actions
+      const copyHeroBtn = document.getElementById("copy-hero-cli");
+      const copyHeroIcon = document.getElementById("copy-hero-icon");
+      if (copyHeroBtn && copyHeroIcon) {
+        copyHeroBtn.addEventListener("click", () => {
+          navigator.clipboard.writeText("npx grasp@latest init").then(() => {
+            copyHeroIcon.textContent = "done";
+            setTimeout(() => {
+              copyHeroIcon.textContent = "content_copy";
+            }, 2000);
+          });
+        });
+      }
+
+      const quickMermaidBtn = document.getElementById("copy-quick-mermaid");
+      if (quickMermaidBtn) {
+        quickMermaidBtn.addEventListener("click", () => {
+          navigator.clipboard.writeText("graph TD; Ingress-->Auth-->DB-->Kafka;").then(() => {
+            const orig = quickMermaidBtn.textContent;
+            quickMermaidBtn.textContent = "Copied!";
+            setTimeout(() => {
+              quickMermaidBtn.textContent = orig;
+            }, 2000);
+          });
+        });
+      }
+
+      // 3. Export Buttons Visual Feedback
+      const btnExportSvg = document.getElementById("btn-export-svg");
+      const btnExportMermaid = document.getElementById("btn-export-mermaid");
+      if (btnExportSvg) {
+        btnExportSvg.addEventListener("click", () => {
+          const originalText = btnExportSvg.innerHTML;
+          btnExportSvg.innerHTML = '<span class="material-symbols-outlined text-[13px] text-primary">done</span><span>Exported SVG</span>';
+          setTimeout(() => {
+            btnExportSvg.innerHTML = originalText;
+          }, 1800);
+        });
+      }
+      if (btnExportMermaid) {
+        btnExportMermaid.addEventListener("click", () => {
+          navigator.clipboard.writeText("graph TD\\n  Ingress[API Ingress]-->Auth[Session Auth]\\n  Auth-->DB[(Pessimistic Order Engine)]\\n  DB-->Kafka[[Kafka Outbox]]").then(() => {
+            const originalText = btnExportMermaid.innerHTML;
+            btnExportMermaid.innerHTML = '<span class="material-symbols-outlined text-[13px] text-secondary">done</span><span>Copied Mermaid</span>';
+            setTimeout(() => {
+              btnExportMermaid.innerHTML = originalText;
+            }, 1800);
+          });
+        });
+      }
+
+      // 4. Live Demo Smooth Scroll Action
+      const btnRunLiveDemo = document.getElementById("btn-run-live-demo");
+      if (btnRunLiveDemo) {
+        btnRunLiveDemo.addEventListener("click", () => {
+          const workbench = document.getElementById("demo-workbench");
+          if (workbench) {
+            workbench.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+      }
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 mt-space-xl"><div class="max-w-7xl mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-xl"><div class="lg:col-span-2 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Profile" class="w-6 h-6 rounded-full object-cover ring-1 ring-outline-variant/40" src="https://lh3.googleusercontent.com/aida/AEtjO1U1P6TijRQKiq12rJSCZsjd9-z5j56-kHxPWWclV12JomWXo-8irgMvN5bh1af7K18-lSA_CWS5RC0m2KHaWjmzlOX3BGKR0EBoshIY9ddj9fUxAGdyVXzzUGOdc6drgwrTqs8qNcWyj43n6poKP5aGHPlDZxy3iSO3hvPeK4SDR2LI9V2RF1Sz5LcbOYCjIYmnJwNMDrfIL1HnyfJLGAlqhFxh49U8SPP4ARDDvPNq59tzHLpK5LYhGs0BkxvJqkaWaRhWLE4a76c"/><span class="font-headline-sm text-headline-sm text-on-surface font-bold">Grasp</span><span class="font-label-sm text-label-sm text-on-surface-variant">ex-Codewalk</span></div><p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm">High-fidelity technical code comprehension, dynamic architectural topology visualizer, and deterministic runtime call-path tracer for engineering teams.</p><div class="flex items-center gap-space-xs mt-space-xs"><div class="flex items-center bg-surface-container-low border border-outline-variant/40 rounded px-space-sm py-1 font-code-sm text-code-sm text-primary"><span class="text-outline mr-1">$</span><span>npx grasp@latest trace</span></div><button class="p-1.5 rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface border border-outline-variant/30 transition-colors" title="Copy CLI command" type="button"><span class="material-symbols-outlined text-[14px]">content_copy</span></button></div></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Engine &amp; Product</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="features" href="#">Runtime Parser</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="architecture-graph" href="#">Topology Graphs</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="presentation-mode" href="#">Presenter Deck</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="pricing" href="#">Enterprise Tier</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Developers</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="documentation" href="#">API References</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="documentation" href="#">Language AST Spec</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="documentation" href="#">CI/CD Automations</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface inline-flex items-center gap-1 transition-colors" href="https://github.com" rel="noreferrer" target="_blank"><span class="material-symbols-outlined text-[14px]">code</span><span>GitHub Repo</span></a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">System Status</span><div class="flex items-center gap-space-xs font-code-sm text-code-sm text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span>Engine: Operational</span></div><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="privacy-security" href="#">Zero-Telemetry Spec</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="terms" href="#">Open Tooling License</a></div></div><div class="mt-space-xl pt-space-lg border-t border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-outline"><p>© 2025 Grasp Systems Inc. All codebase topological rights reserved.</p><div class="flex items-center gap-space-md font-code-sm text-code-sm"><span class="hover:text-on-surface transition-colors cursor-pointer">SECURITY.md</span><span class="hover:text-on-surface transition-colors cursor-pointer">SOC2 Type II</span><span class="text-primary">LATENCY: 12ms</span></div></div></div></footer></body></html>

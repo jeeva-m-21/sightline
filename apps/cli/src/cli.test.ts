@@ -25,7 +25,7 @@ test('End-to-End CLI Pipeline: runIndexingPipeline and startViewerServer', async
 
   // 2. Start Viewer Server
   const store = new SightlineStore(tempDbPath);
-  const instance = await startViewerServer(store, 3999);
+  const instance = await startViewerServer(store, goldenRepoPath, 3999);
 
   assert.ok(instance.url.includes('3999') || instance.port > 0);
 
@@ -34,7 +34,7 @@ test('End-to-End CLI Pipeline: runIndexingPipeline and startViewerServer', async
   assert.equal(htmlRes.status, 200);
   const html = await htmlRes.text();
   assert.ok(html.includes('Sightline'), 'HTML must contain Sightline branding');
-  assert.ok(html.includes('Application Regions') || html.includes('Regions'), 'HTML must contain regional overview');
+  assert.ok(html.includes('Architectural Guide') || html.includes('Repository Tree'), 'HTML must contain 3-column navigation');
 
   // 4. Test HTTP GET /api/data
   const apiRes = await fetch(`${instance.url}/api/data`);
@@ -43,6 +43,13 @@ test('End-to-End CLI Pipeline: runIndexingPipeline and startViewerServer', async
   assert.ok(data.snapshot, 'API must return active snapshot');
   assert.ok(data.clusters.length >= 3, 'API must return detected feature clusters');
   assert.ok(data.entities.length >= 5, 'API must return extracted entities');
+  assert.ok(data.projectTree, 'API must return project directory tree');
+
+  // 5. Test HTTP GET /api/file
+  const fileRes = await fetch(`${instance.url}/api/file?path=app/billing/page.tsx`);
+  assert.equal(fileRes.status, 200);
+  const fileData = (await fileRes.json()) as any;
+  assert.ok(fileData.content.includes('BillingPage'), 'Must return real file content');
 
   // 5. Clean up
   await new Promise<void>((resolve) => instance.server.close(() => resolve()));

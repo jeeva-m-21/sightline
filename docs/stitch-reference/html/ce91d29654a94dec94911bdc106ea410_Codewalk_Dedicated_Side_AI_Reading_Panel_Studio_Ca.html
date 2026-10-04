@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Codewalk - Chapter 02: Data Architecture &amp; State</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            canvas: {
+              DEFAULT: "#090B10",
+              subtle: "#0D1117",
+              card: "#151922",
+              elevated: "#181D28",
+              hover: "#1E2433"
+            },
+            border: {
+              subtle: "#202636",
+              DEFAULT: "#283044",
+              active: "#3D4865"
+            },
+            emerald: {
+              glow: "#10B981",
+              bright: "#34D399",
+              surface: "rgba(16, 185, 129, 0.08)",
+              border: "rgba(16, 185, 129, 0.25)"
+            },
+            cyan: {
+              glow: "#38BDF8",
+              surface: "rgba(56, 189, 248, 0.08)",
+              border: "rgba(56, 189, 248, 0.25)"
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'glow-emerald': '0 0 20px -4px rgba(16, 185, 129, 0.25)',
+            'glow-cyan': '0 0 20px -4px rgba(56, 189, 248, 0.25)',
+            'card-elevated': '0 8px 32px -4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03)'
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #262D3D; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #353E54; }
+  </style>
+</head>
+<body class="bg-canvas text-slate-200 font-sans antialiased min-h-screen selection:bg-emerald-500/20 selection:text-emerald-300" style="background-color: #0d0f14; background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px); background-size: 24px 24px;">
+<!-- TOP APP HEADER -->
+<header class="sticky top-0 z-50 h-14 bg-canvas-subtle/80 backdrop-blur-xl border-b border-border/80 px-4 flex items-center justify-between gap-4">
+<!-- Left: Logo & Repository Pill -->
+<div class="flex items-center gap-3 min-w-[280px]">
+<div class="flex items-center gap-2.5 group cursor-pointer">
+<div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-600 via-slate-400 to-white p-[1px] flex items-center justify-center shadow-sm"><div class="w-full h-full bg-canvas rounded-[11px] flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div></div>
+<span class="font-semibold text-slate-100 text-[15px] tracking-tight group-hover:text-white transition-colors">Codewalk</span>
+</div>
+<div class="h-4 w-[1px] bg-border mx-0.5"></div>
+<!-- Repo / Branch Selector Pill -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-canvas-card border border-border rounded-lg text-xs hover:border-border-active transition-all cursor-pointer">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="font-medium text-slate-200">backend-service</span>
+<span class="text-slate-500 font-mono">/</span>
+<div class="flex items-center gap-1 bg-cyan-surface border border-cyan-border px-1.5 py-0.2 rounded text-[11px] font-mono text-cyan-400">
+<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<line x1="6" x2="6" y1="3" y2="15"></line>
+<circle cx="18" cy="6" r="3"></circle>
+<circle cx="6" cy="18" r="3"></circle>
+<path d="M18 9a9 9 0 0 1-9 9"></path>
+</svg>
+<span class="">main</span>
+</div>
+</div>
+</div>
+<!-- Center: Horizontal Stepper Progress -->
+<nav class="hidden 2xl:flex items-center gap-1.5 bg-canvas-card/60 p-1 rounded-xl border border-border/70 text-xs">
+<a class="flex items-center gap-1.5 px-2.5 py-1 text-slate-400 hover:text-slate-200 rounded-lg transition-colors" href="#">
+<span class="w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-[10px] font-mono font-medium">✓</span>
+<span class="">1. Big Picture</span>
+</a>
+<span class="text-slate-700">/</span>
+<a class="flex items-center gap-1.5 px-3 py-1 bg-white/10 border border-white/20 text-white font-medium rounded-lg shadow-sm" href="#"><span class="w-4 h-4 rounded-full bg-white text-slate-950 flex items-center justify-center text-[10px] font-mono font-bold">2</span><span class="">2. Data &amp; Models</span></a>
+<span class="text-slate-700">/</span>
+<a class="flex items-center gap-1.5 px-2.5 py-1 text-slate-400 hover:text-slate-200 rounded-lg transition-colors" href="#">
+<span class="w-4 h-4 rounded-full bg-canvas-subtle border border-slate-700 text-slate-400 flex items-center justify-center text-[10px] font-mono">3</span>
+<span class="">3. API Front Door</span>
+</a>
+<span class="text-slate-700">/</span>
+<a class="flex items-center gap-1.5 px-2.5 py-1 text-slate-400 hover:text-slate-200 rounded-lg transition-colors" href="#">
+<span class="w-4 h-4 rounded-full bg-canvas-subtle border border-slate-700 text-slate-400 flex items-center justify-center text-[10px] font-mono">4</span>
+<span class="">4. Core Flow</span>
+</a>
+<span class="text-slate-700">/</span>
+<a class="flex items-center gap-1.5 px-2.5 py-1 text-slate-400 hover:text-slate-200 rounded-lg transition-colors" href="#">
+<span class="w-4 h-4 rounded-full bg-canvas-subtle border border-slate-700 text-slate-400 flex items-center justify-center text-[10px] font-mono">5</span>
+<span class="">5. Module Canvas</span>
+</a>
+</nav>
+<!-- Right: Search (⌘K), Assistant CTA & User -->
+<div class="flex items-center gap-2.5 justify-end min-w-[280px]">
+<button class="flex items-center gap-2 px-2.5 py-1.5 bg-canvas-card border border-border rounded-lg text-slate-400 hover:text-slate-200 hover:border-border-active transition-all text-xs">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+<span class="">Search symbols...</span>
+<kbd class="font-mono text-[10px] bg-canvas-elevated border border-border px-1.5 py-0.5 rounded text-slate-400">⌘K</kbd>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/15 text-white border border-white/20 font-medium text-xs rounded-lg shadow-sm transition-all active:scale-[0.98] cursor-pointer group"><span class="material-symbols-outlined text-[15px] text-cyan-400">auto_awesome</span><span class="font-medium">Ask AI</span><kbd class="font-mono text-[10px] bg-white/10 border border-white/15 px-1.5 py-0.5 rounded text-slate-300">⌘J</kbd></button>
+<div class="w-7 h-7 rounded-lg bg-gradient-to-br from-slate-700 to-slate-900 border border-border flex items-center justify-center text-xs font-mono font-medium text-slate-300">
+        CW
+      </div>
+</div>
+</header>
+<!-- MAIN 3-COLUMN WORKSPACE CONTAINER -->
+<div class="max-w-[1760px] mx-auto px-4 py-5">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+<!-- LEFT COLUMN: ARCHITECTURAL CODEBASE EXPLORER (3 cols) -->
+<aside class="lg:col-span-3 flex flex-col gap-4 sticky top-[76px]">
+<!-- Tour Mode Switcher -->
+<div class="p-1 bg-canvas-card border border-border rounded-xl flex items-center gap-1">
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 bg-white/10 border border-white/20 text-white font-mono text-xs font-medium rounded-lg shadow-sm"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg><span class="">Guided Tour</span></button>
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-slate-400 hover:text-slate-200 font-mono text-xs transition-colors rounded-lg">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="">Free Roam</span>
+</button>
+</div>
+<!-- Scope Indicator Pill -->
+<div class="bg-canvas-card border border-border/90 px-3 py-2 rounded-xl flex items-center justify-between"><div class="flex items-center gap-2"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span></span><span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Chapter Scope</span></div><span class="font-mono text-xs text-slate-200 bg-white/10 px-2 py-0.5 rounded border border-white/15 font-medium">3 Active Models</span></div>
+<!-- Clean Decluttered File Architecture Tree Card -->
+<div class="bg-canvas-card border border-border rounded-2xl p-3.5 shadow-card-elevated flex flex-col gap-3">
+<div class="flex items-center justify-between pb-2 border-b border-border/80">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-slate-400">account_tree</span>
+<span class="font-mono text-[11px] uppercase tracking-wider text-slate-400 font-medium">File Architecture</span>
+</div>
+<span class="font-mono text-[11px] text-slate-500">packages/models</span>
+</div>
+<!-- Tree Items -->
+<div class="flex flex-col gap-1 text-xs">
+<!-- Collapsed app directory -->
+<div class="flex items-center gap-2 py-1.5 px-2 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-canvas-hover transition-all cursor-pointer">
+<svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="font-mono">apps/</span>
+<span class="ml-auto font-mono text-[10px] text-slate-600">2 dirs</span>
+</div>
+<!-- Expanded packages/ directory -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 py-1.5 px-2 rounded-lg text-slate-200 font-medium cursor-pointer">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+<svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+<span class="font-mono">packages/</span>
+</div>
+<!-- packages/models (ACTIVE FOCUS CONTAINER) -->
+<div class="ml-3 pl-2.5 border-l border-border/80 flex flex-col gap-1 my-0.5"><div class="flex items-center gap-2 py-1 px-2 text-white font-medium font-mono text-xs"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg><svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span class="">models/</span></div><div class="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-canvas-hover transition-colors cursor-pointer group"><div class="flex items-center gap-2 font-mono text-xs"><span class="w-1.5 h-1.5 rounded-full bg-slate-500 group-hover:bg-slate-300 transition-colors"></span><span class="text-slate-300 group-hover:text-white">user.py</span></div><span class="font-mono text-[10px] px-1.5 py-0.5 bg-canvas-subtle border border-border text-slate-400 rounded">ENTITY</span></div><div class="flex items-center justify-between py-1.5 px-2 rounded-lg bg-white/10 border border-white/30 text-white shadow-sm"><div class="flex items-center gap-2 font-mono text-xs font-semibold"><span class="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#ffffff]"></span><span class="">order.py</span></div><span class="font-mono text-[10px] px-1.5 py-0.5 bg-white/20 text-white rounded font-medium">ACTIVE</span></div><div class="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-canvas-hover transition-colors cursor-pointer group"><div class="flex items-center gap-2 font-mono text-xs"><span class="w-1.5 h-1.5 rounded-full bg-slate-500 group-hover:bg-slate-300 transition-colors"></span><span class="text-slate-300 group-hover:text-white">ledger.py</span></div><span class="font-mono text-[10px] px-1.5 py-0.5 bg-canvas-subtle border border-border text-slate-400 rounded">AUDIT</span></div></div>
+<!-- Other package directories (collapsed / clean) -->
+<div class="flex items-center justify-between py-1 px-2 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-canvas-hover transition-all cursor-pointer">
+<div class="flex items-center gap-2 font-mono">
+<svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+<span class="">payments/</span>
+</div>
+<span class="font-mono text-[10px] text-slate-600">NET</span>
+</div>
+<div class="flex items-center justify-between py-1 px-2 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-canvas-hover transition-all cursor-pointer">
+<div class="flex items-center gap-2 font-mono">
+<svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+<span class="">auth/</span>
+</div>
+<span class="font-mono text-[10px] text-slate-600">API</span>
+</div>
+</div>
+<!-- workers/ -->
+<div class="flex items-center justify-between py-1.5 px-2 rounded-lg text-slate-600 hover:text-slate-400 transition-colors cursor-pointer">
+<div class="flex items-center gap-2 font-mono">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+<span class="">workers/</span>
+</div>
+<span class="font-mono text-[10px]">QUEUE</span>
+</div>
+</div>
+</div>
+<!-- Architectural Context Sparkline Card -->
+<div class="bg-canvas-card border border-border rounded-2xl p-3.5 shadow-card-elevated flex flex-col gap-3"><div class="flex items-center justify-between pb-2 border-b border-border/80"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-cyan-400">menu_book</span><span class="font-mono text-[11px] uppercase tracking-wider text-slate-300 font-semibold">Chapters Overview</span></div><span class="font-mono text-[10px] text-slate-400 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">6 Parts</span></div><div class="flex flex-col gap-1.5 text-xs font-mono"><a class="flex items-center justify-between p-2 rounded-lg bg-canvas-subtle/80 hover:bg-canvas-hover border border-border/60 text-slate-400 hover:text-slate-200 transition-all group" href="#"><div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-[10px] font-bold">✓</span><span class="truncate font-sans font-medium text-slate-400 group-hover:text-slate-200">01. High-Level Architecture</span></div><span class="text-[10px] text-slate-600 group-hover:text-slate-400">4m</span></a><a class="flex items-center justify-between p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-white shadow-sm" href="#"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]"></span><span class="truncate font-sans font-semibold text-cyan-300">02. Data Architecture &amp; Models</span></div><span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-medium">ACTIVE</span></a><a class="flex items-center justify-between p-2 rounded-lg bg-canvas-subtle/80 hover:bg-canvas-hover border border-border/60 text-slate-400 hover:text-slate-200 transition-all group" href="#"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-slate-400"></span><span class="truncate font-sans font-medium text-slate-400 group-hover:text-slate-200">03. API Front Door &amp; Ingress</span></div><span class="text-[10px] text-slate-600 group-hover:text-slate-400">5m</span></a><a class="flex items-center justify-between p-2 rounded-lg bg-canvas-subtle/80 hover:bg-canvas-hover border border-border/60 text-slate-400 hover:text-slate-200 transition-all group" href="#"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-slate-400"></span><span class="truncate font-sans font-medium text-slate-400 group-hover:text-slate-200">04. Core Payment State Machine</span></div><span class="text-[10px] text-slate-600 group-hover:text-slate-400">6m</span></a><a class="flex items-center justify-between p-2 rounded-lg bg-canvas-subtle/80 hover:bg-canvas-hover border border-border/60 text-slate-400 hover:text-slate-200 transition-all group" href="#"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-slate-400"></span><span class="truncate font-sans font-medium text-slate-400 group-hover:text-slate-200">05. Edge Handling &amp; Rollbacks</span></div><span class="text-[10px] text-slate-600 group-hover:text-slate-400">4m</span></a><a class="flex items-center justify-between p-2 rounded-lg bg-canvas-subtle/80 hover:bg-canvas-hover border border-border/60 text-slate-400 hover:text-slate-200 transition-all group" href="#"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-slate-400"></span><span class="truncate font-sans font-medium text-slate-400 group-hover:text-slate-200">06. Security &amp; Token Ledger</span></div><span class="text-[10px] text-slate-600 group-hover:text-slate-400">3m</span></a></div></div><div class="bg-canvas-card border border-border rounded-2xl p-4 flex flex-col gap-2.5"><div class="flex items-center justify-between"><span class="font-mono text-[11px] uppercase tracking-wider text-slate-400">Schema Coupling</span><span class="font-mono text-xs text-slate-200 font-medium">Fan-out 1:2</span></div><div class="w-full bg-canvas-subtle h-1.5 rounded-full overflow-hidden flex gap-0.5 p-[1px] border border-border/50"><div class="bg-white h-full w-2/5 rounded-full shadow-sm"></div><div class="bg-slate-400 h-full w-1/5 rounded-full"></div><div class="bg-slate-700 h-full w-2/5 rounded-full"></div></div><p class="text-xs text-slate-400 leading-relaxed">Isolated domain model layer enables zero-dependency testing against in-memory SQLite instances.</p><div class="pt-2 border-t border-border/60 flex items-center justify-between text-[11px] font-mono text-slate-500"><span class="">HEAD @ 7f4a21</span><span class="text-slate-300 font-medium">INDEXED</span></div></div>
+</aside>
+<!-- CENTER COLUMN: THE GUIDED READING CANVAS (6 cols) -->
+<main class="flex flex-col gap-6 w-full lg:col-span-5">
+<!-- Chapter Header -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 bg-white/10 border border-white/20 rounded-md text-slate-200 font-mono text-[11px] font-semibold tracking-wider">CHAPTER 02 // DATA ARCHITECTURE &amp; STATE</span>
+</div>
+<h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-white">
+            How Data is Stored and Modeled
+          </h1>
+<p class="text-slate-300 text-sm leading-relaxed">
+            Before exploring route handlers or business logic, understand the 3 core entities that govern this entire system: Users, Orders, and PaymentLedger. Every customer action starts with a User, generates an Order, and commits a record to the financial Ledger.
+          </p>
+</div>
+<!-- FIGMA / LINEAR STYLE ENTITY RELATIONSHIP CANVAS -->
+<div class="bg-canvas-card border border-border rounded-2xl p-5 shadow-card-elevated relative flex flex-col gap-4 overflow-hidden" style="background-color: #14171f; border-color: #272c3b; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);">
+<!-- Ambient Radial Background Glow -->
+<div class="absolute -top-24 -right-24 w-80 h-80 bg-white/[0.03] rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -left-24 w-80 h-80 bg-white/[0.02] rounded-full blur-3xl pointer-events-none"></div>
+<!-- Canvas Top Toolbar -->
+<div class="relative z-10 flex items-center justify-between pb-3 border-b border-border/80">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-slate-200" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><line x1="3" x2="21" y1="9" y2="9"></line><line x1="9" x2="9" y1="21" y2="9"></line></svg></div>
+<span class="text-sm font-semibold text-slate-100">Entity Relationship Schema</span>
+<span class="font-mono text-[11px] bg-canvas-elevated border border-border px-2 py-0.5 rounded text-slate-400">3 entities mapped</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="flex items-center bg-canvas-elevated border border-border rounded-lg px-2 py-0.5 font-mono text-xs text-slate-300">
+<button class="px-1 text-slate-500 hover:text-slate-200 transition-colors">-</button>
+<span class="px-1.5 text-slate-300 font-medium">100%</span>
+<button class="px-1 text-slate-500 hover:text-slate-200 transition-colors">+</button>
+</div>
+<button class="p-1.5 rounded-lg border border-border bg-canvas-elevated text-slate-400 hover:text-slate-200 hover:border-border-active transition-all">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Canvas Body: 3 Sleek Entity Cards -->
+<div class="relative z-10 grid grid-cols-1 xl:grid-cols-3 gap-3 pt-1"><div class="bg-[#1b1f2b] border border-[#2d3345] hover:border-slate-500 rounded-xl p-3.5 flex flex-col gap-2.5 transition-all shadow-md"><div class="flex items-center justify-between pb-2 border-b border-[#2d3345]"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span><span class="font-mono text-xs font-semibold text-white">User</span></div><span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-white/5 text-slate-400 border border-white/10">users</span></div><div class="flex flex-col gap-1 font-mono text-xs"><div class="flex items-center justify-between bg-cyan-500/10 text-cyan-300 px-2 py-1 rounded border border-cyan-500/20"><span class="flex items-center gap-1 font-semibold text-[11px]"><span class="text-[9px] text-cyan-400 font-bold">PK</span> id</span><span class="text-[10px] text-cyan-400/80">uuid</span></div><div class="flex items-center justify-between text-slate-300 px-2 py-0.5 text-[11px]"><span class="">email</span><span class="text-slate-500 text-[10px]">string</span></div><div class="flex items-center justify-between text-slate-300 px-2 py-0.5 text-[11px]"><span class="">role</span><span class="text-amber-400 text-[10px]">enum</span></div><div class="flex items-center justify-between text-slate-300 px-2 py-0.5 text-[11px]"><span class="">created_at</span><span class="text-slate-500 text-[10px]">timestamp</span></div></div><div class="pt-2 border-t border-[#2d3345] flex items-center justify-between"><span class="font-mono text-[10px] text-slate-400">8 fields</span><span class="font-mono text-[10px] text-cyan-400 font-medium">Root Node</span></div></div><div class="bg-[#1e2332] border-2 border-white/40 hover:border-white/70 rounded-xl p-3.5 flex flex-col gap-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.4)] relative"><div class="absolute -top-2.5 right-3 bg-white text-slate-950 font-mono text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">Active Focus</div><div class="flex items-center justify-between pb-2 border-b border-white/15"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#ffffff]"></span><span class="font-mono text-xs font-bold text-white">Order</span></div><span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-white/10 text-white font-medium">orders</span></div><div class="flex flex-col gap-1 font-mono text-xs"><div class="flex items-center justify-between text-white bg-white/15 px-2 py-1 rounded border border-white/20"><span class="flex items-center gap-1 font-semibold text-[11px]"><span class="text-[9px] text-white font-bold">PK</span> id</span><span class="text-[10px] text-slate-200">uuid</span></div><div class="flex items-center justify-between text-slate-200 bg-black/20 px-2 py-0.5 rounded border border-white/10 text-[11px]"><span class="flex items-center gap-1"><span class="text-[9px] text-slate-400 font-bold">FK</span> user_id</span><span class="text-[10px] text-slate-400">→ users</span></div><div class="flex items-center justify-between text-slate-200 px-2 py-0.5 text-[11px]"><span class="">status</span><span class="text-slate-300 text-[10px]">enum(3)</span></div><div class="flex items-center justify-between text-slate-300 px-2 py-0.5 text-[11px]"><span class="">total_cents</span><span class="text-slate-500 text-[10px]">int</span></div></div><div class="pt-2 border-t border-white/15 flex items-center justify-between"><span class="font-mono text-[10px] text-white font-semibold">Active File</span><span class="font-mono text-[10px] text-slate-300">1:N with User</span></div></div><div class="bg-[#1b1f2b] border border-[#2d3345] hover:border-slate-500 rounded-xl p-3.5 flex flex-col gap-2.5 transition-all shadow-md"><div class="flex items-center justify-between pb-2 border-b border-[#2d3345]"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-slate-400"></span><span class="font-mono text-xs font-semibold text-white">PaymentLedger</span></div><span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-white/5 text-slate-400 border border-white/10">ledger</span></div><div class="flex flex-col gap-1 font-mono text-xs"><div class="flex items-center justify-between text-slate-200 bg-white/5 px-2 py-1 rounded border border-white/10"><span class="flex items-center gap-1 font-semibold text-[11px]"><span class="text-[9px] text-slate-400 font-bold">PK</span> id</span><span class="text-[10px] text-slate-400">uuid</span></div><div class="flex items-center justify-between text-slate-200 bg-white/5 px-2 py-0.5 rounded border border-white/10 text-[11px]"><span class="flex items-center gap-1"><span class="text-[9px] text-slate-400 font-bold">FK</span> order_id</span><span class="text-[10px] text-slate-400">→ orders</span></div><div class="flex items-center justify-between text-slate-300 px-2 py-0.5 text-[11px]"><span class="">amount_cents</span><span class="text-slate-500 text-[10px]">int</span></div><div class="flex items-center justify-between text-slate-300 px-2 py-0.5 text-[11px] font-mono"><span class="">tamper_hash</span><span class="text-slate-500 text-[10px]">sha256</span></div></div><div class="pt-2 border-t border-[#2d3345] flex items-center justify-between"><span class="font-mono text-[10px] px-1.5 py-0.2 bg-white/5 border border-white/10 text-slate-300 rounded font-medium">Audit Log</span><span class="font-mono text-[10px] text-slate-400">1:1 with Order</span></div></div></div>
+<!-- Relational Connector Bar -->
+<div class="relative z-10 bg-canvas-subtle border border-border/70 px-4 py-2 rounded-xl flex items-center justify-center font-mono text-xs"><div class="flex items-center gap-2 text-slate-400"><span class="text-slate-200 font-semibold">User</span><span class="text-slate-500 flex items-center gap-1"><span class="">───── 1:N (owns) ────►</span></span><span class="text-white font-semibold">Order</span><span class="text-slate-500 flex items-center gap-1"><span class="">───── 1:1 (records) ────►</span></span><span class="text-slate-200 font-semibold">PaymentLedger</span></div></div>
+</div>
+<!-- COMMON DOUBTS ON THIS CHAPTER (INTERACTIVE RAYCAST-STYLE PILL CARDS) -->
+<!-- BOTTOM NAVIGATION BAR -->
+<div class="pt-2 border-t border-border/80 flex items-center justify-between pb-8">
+<button class="flex items-center gap-2 px-3.5 py-2 text-slate-400 hover:text-slate-200 hover:bg-canvas-card border border-transparent hover:border-border rounded-xl text-xs font-medium transition-all">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<line x1="19" x2="5" y1="12" y2="12"></line>
+<polyline points="12 19 5 12 12 5"></polyline>
+</svg>
+<span class="">Previous: The Big Picture</span>
+</button>
+<div class="flex items-center gap-1.5 px-3 py-1 bg-canvas-card border border-border rounded-full font-mono text-[11px] text-slate-400">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span class="">3 min comprehension read</span>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-100 text-slate-950 font-semibold rounded-xl text-xs shadow-sm transition-all active:scale-[0.98]"><span class="">Next: The API Front Door</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+</div>
+</main><aside class="lg:col-span-4 2xl:col-span-4 flex flex-col gap-4 sticky top-[76px] self-start h-[calc(100vh-96px)]"><div class="bg-canvas-card border border-border rounded-2xl flex flex-col h-full shadow-card-elevated overflow-hidden"><div class="p-3.5 border-b border-border/80 flex items-center justify-between bg-canvas-subtle/70 backdrop-blur-md"><div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 shadow-sm"><span class="material-symbols-outlined text-[16px]">auto_awesome</span></div><div class="flex flex-col"><div class="flex items-center gap-2"><span class="text-xs font-semibold text-white tracking-tight">Ask AI Inspector</span><span class="flex items-center gap-1 font-mono text-[9px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>Grounded</span></div></div></div><div class="flex items-center gap-1.5"><span class="font-mono text-[10px] text-slate-500 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">142ms · 340 tok</span><button class="p-1 text-slate-400 hover:text-white hover:bg-canvas-hover rounded-lg transition-all" title="Toggle dock (⌘J)"><span class="material-symbols-outlined text-[18px]">dock_to_left</span></button></div></div><div class="px-3.5 py-2 bg-canvas-subtle/40 border-b border-border/60 flex items-center justify-between text-[11px] font-mono"><div class="flex items-center gap-1.5 text-slate-400"><span class="material-symbols-outlined text-[13px] text-slate-500">data_object</span><span>Context:</span><span class="text-cyan-300 font-medium bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded">models/order.py</span></div><a class="text-slate-400 hover:text-slate-200 flex items-center gap-0.5 transition-colors" href="#"><span class="text-[10px]">AST v2.4</span><span class="material-symbols-outlined text-[12px]">open_in_new</span></a></div><div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 text-xs font-sans text-slate-300 scroll-smooth"><div class="flex items-start gap-2.5 bg-white/[0.03] border border-white/10 rounded-xl p-3"><div class="w-5 h-5 rounded-md bg-white/10 flex items-center justify-center text-slate-200 text-[11px] font-mono font-bold mt-0.5">Q</div><div class="flex-1 flex flex-col gap-1"><span class="text-[10px] font-mono uppercase text-slate-500 tracking-wider font-semibold">User Inquiry</span><p class="text-slate-200 font-medium leading-relaxed">Why is PaymentLedger isolated into its own model instead of just adding a `paid_at` timestamp on Orders?</p></div></div><div class="flex flex-col gap-3.5 pl-1"><div class="flex items-center gap-2"><div class="w-5 h-5 rounded-md bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 flex items-center justify-center"><span class="material-symbols-outlined text-[13px]">neurology</span></div><span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-200">Architectural Rationale</span></div><p class="text-slate-300 leading-relaxed">Separating <code class="text-cyan-300 font-mono text-[11px] bg-cyan-500/10 px-1 py-0.5 rounded">PaymentLedger</code> from mutable <code class="text-white font-mono text-[11px] bg-white/10 px-1 py-0.5 rounded">Orders</code> prevents high-frequency read/write row contention and enforces financial audit compliance through <strong>append-only immutability</strong>.</p><div class="bg-canvas-subtle border border-border/90 rounded-xl p-3 flex flex-col gap-2"><div class="flex items-center justify-between pb-1.5 border-b border-border/60 text-[10px] font-mono text-slate-400"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[13px] text-emerald-400">verified</span><span>packages/models/ledger.py:24</span></div><button class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">content_copy</span><span>Copy</span></button></div><pre class="font-mono text-[11px] text-slate-300 leading-5 overflow-x-auto py-1"><code><span class="text-cyan-400">class</span> <span class="text-white font-semibold">PaymentLedger</span>(BaseModel):<br/>    id: UUID = Field(default_factory=uuid4)<br/>    order_id: UUID = Field(foreign_key=<span class="text-emerald-300">"orders.id"</span>)<br/>    amount_cents: <span class="text-cyan-300">int</span><br/>    tamper_hash: <span class="text-cyan-300">str</span>  <span class="text-slate-500"># HMAC-SHA256</span><br/>    <br/>    <span class="text-cyan-400">class</span> <span class="text-white font-semibold">Config</span>:<br/>        frozen = <span class="text-amber-400">True</span>  <span class="text-slate-500"># Enforces append-only</span></code></pre></div><div class="bg-cyan-500/10 border border-cyan-500/25 rounded-xl p-3 flex items-start gap-2.5 text-cyan-200"><span class="material-symbols-outlined text-[16px] text-cyan-400 mt-0.5">shield_with_heart</span><div class="flex-1"><p class="text-[11px] leading-relaxed"><strong class="text-white font-medium">Security Guarantee:</strong> If an Order transitions between <code class="font-mono text-[10px] text-cyan-300">PENDING</code>, <code class="font-mono text-[10px] text-cyan-300">DISPATCHED</code>, or <code class="font-mono text-[10px] text-cyan-300">REFUNDED</code>, the immutable ledger entry remains cryptographically intact without trigger cascades.</p></div></div><div class="flex flex-col gap-1.5 pt-1"><span class="font-mono text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Recommended Follow-ups</span><div class="flex flex-wrap gap-1.5"><button class="text-[11px] px-2 py-1 rounded-lg bg-canvas-card border border-border text-slate-300 hover:text-white hover:border-cyan-400/50 hover:bg-canvas-hover transition-all text-left flex items-center gap-1.5"><span>⚡ Concurrency benchmark</span><span class="material-symbols-outlined text-[12px] text-slate-500">arrow_forward</span></button><button class="text-[11px] px-2 py-1 rounded-lg bg-canvas-card border border-border text-slate-300 hover:text-white hover:border-cyan-400/50 hover:bg-canvas-hover transition-all text-left flex items-center gap-1.5"><span>🔄 How does refund rollback work?</span><span class="material-symbols-outlined text-[12px] text-slate-500">arrow_forward</span></button><button class="text-[11px] px-2 py-1 rounded-lg bg-canvas-card border border-border text-slate-300 hover:text-white hover:border-cyan-400/50 hover:bg-canvas-hover transition-all text-left flex items-center gap-1.5"><span>🔍 View mutation handlers</span><span class="material-symbols-outlined text-[12px] text-slate-500">arrow_forward</span></button></div></div></div></div><div class="p-3 bg-canvas-subtle border-t border-border/80 flex flex-col gap-2"><div class="flex items-center gap-2 bg-canvas-card border border-border focus-within:border-cyan-400/50 rounded-xl px-3 py-2 transition-all shadow-inner"><span class="material-symbols-outlined text-[16px] text-slate-400">chat</span><input class="bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none flex-1 font-sans" placeholder="Ask anything about this entity architecture..." type="text"/><div class="flex items-center gap-1.5"><kbd class="font-mono text-[10px] bg-white/10 border border-white/15 px-1.5 py-0.5 rounded text-slate-300">⌘J</kbd><button class="w-6 h-6 rounded-lg bg-white hover:bg-slate-200 text-slate-950 flex items-center justify-center transition-all cursor-pointer shadow-sm" title="Send"><span class="material-symbols-outlined text-[14px] font-bold">arrow_upward</span></button></div></div><div class="flex items-center justify-between text-[10px] font-mono text-slate-500 px-1"><span>Multi-turn memory active</span><span>Enter ↵ to submit</span></div></div></div></aside>
+<!-- RIGHT COLUMN: CONTEXTUAL AI INSPECTOR PANEL (3 cols) -->
+</div>
+</div>
+</body></html>

@@ -16,3 +16,18 @@ export interface FeatureCluster {
   filePaths: string[];
   entityIds: string[];
 }
+
+export interface RepoFileNode {
+  name: string;
+  path: string;
+  kind: 'directory' | 'file';
+  fileType?: 'page' | 'route' | 'component' | 'server_action' | 'utility';
+  urlPath?: string;
+  isClientComponent?: boolean;
+  isServerAction?: boolean;
+  symbolsCount?: number;
+  outgoingCount?: number;
+  incomingCount?: number;
+  children?: RepoFileNode[];
+}
+
