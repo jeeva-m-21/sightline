@@ -41,7 +41,7 @@ export function startViewerServer(store: SightlineStore, preferredPort = 3111): 
     });
 
     const listenOnPort = (port: number) => {
-      server.listen(port, () => {
+      server.listen(port, '0.0.0.0', () => {
         resolve({
           server,
           port,
