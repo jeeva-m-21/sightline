@@ -76,6 +76,71 @@ export async function runIndexingPipeline(projectDir: string, dbPath: string): P
     }
   }
 
+  // Generate Edges: renders, requests, calls
+  const entityMapByName = new Map<string, Entity>();
+  for (const ent of entities) {
+    const symName = ent.canonicalKey.split('#')[1] || ent.canonicalKey;
+    entityMapByName.set(symName, ent);
+  }
+
+  const routeEntityByUrl = new Map<string, Entity>();
+  for (const ent of entities) {
+    if (ent.kind === 'route') {
+      // Find matching route url
+      const routeInfo = analysis.routes.find((r) => ent.canonicalKey.startsWith(r.filePath));
+      if (routeInfo) {
+        routeEntityByUrl.set(routeInfo.urlPath, ent);
+      }
+    }
+  }
+
+  for (const file of analysis.extractedFiles) {
+    const fileEntities = entities.filter((e) => e.canonicalKey.startsWith(file.filePath));
+    const mainEntity = fileEntities.find((e) => e.kind === 'component') || fileEntities[0];
+    if (!mainEntity) continue;
+
+    // 1. Renders edges: <Button />, <Header />
+    for (const jsx of file.renderedComponents) {
+      const targetEntity = entityMapByName.get(jsx.tag);
+      if (targetEntity && targetEntity.id !== mainEntity.id) {
+        edges.push({
+          snapshotId,
+          src: mainEntity.id,
+          dst: targetEntity.id,
+          kind: 'renders',
+          provenance: 'EXTRACTED',
+          reason: `<${jsx.tag} /> rendered in JSX`,
+          evidence: {
+            filePath: file.filePath,
+            startLine: jsx.line,
+          },
+        });
+      }
+    }
+
+    // 2. Requests edges: fetch('/api/checkout') -> app/api/checkout/route.ts
+    for (const call of file.calls) {
+      if (call.callee === 'fetch' && call.args[0]) {
+        const urlArg = call.args[0];
+        const targetRouteEntity = routeEntityByUrl.get(urlArg);
+        if (targetRouteEntity) {
+          edges.push({
+            snapshotId,
+            src: mainEntity.id,
+            dst: targetRouteEntity.id,
+            kind: 'requests',
+            provenance: 'HEURISTIC',
+            reason: `fetch('${urlArg}') client request to backend handler`,
+            evidence: {
+              filePath: file.filePath,
+              startLine: call.line,
+            },
+          });
+        }
+      }
+    }
+  }
+
   // Save in store
   store.saveSnapshot(snapshot, entities, entityStates, edges, analysis.clusters);
   store.close();
