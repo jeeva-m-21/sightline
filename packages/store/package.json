@@ -1,0 +1,22 @@
+{
+  "name": "@sightline/store",
+  "version": "0.1.0",
+  "description": "Local SQLite database and snapshot engine for Sightline",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/**/*.test.js"
+  },
+  "dependencies": {
+    "@sightline/adapter-nextjs": "workspace:*",
+    "@sightline/core": "workspace:*",
+    "better-sqlite3": "^13.0.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.4",
+    "typescript": "^5.7.0"
+  }
+}

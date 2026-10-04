@@ -1,0 +1,21 @@
+{
+  "name": "@sightline/extractor",
+  "version": "0.1.0",
+  "description": "Deterministic Tree-sitter AST parser and symbol extractor for Sightline",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/**/*.test.js"
+  },
+  "dependencies": {
+    "@sightline/core": "workspace:*",
+    "tree-sitter": "^0.25.1",
+    "tree-sitter-typescript": "^0.23.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^5.7.0"
+  }
+}

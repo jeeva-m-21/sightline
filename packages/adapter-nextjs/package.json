@@ -1,0 +1,20 @@
+{
+  "name": "@sightline/adapter-nextjs",
+  "version": "0.1.0",
+  "description": "Next.js structure adapter, route convention resolver, and feature clusterer",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/**/*.test.js"
+  },
+  "dependencies": {
+    "@sightline/core": "workspace:*",
+    "@sightline/extractor": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^5.7.0"
+  }
+}

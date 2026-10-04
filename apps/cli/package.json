@@ -1,0 +1,30 @@
+{
+  "name": "sightline",
+  "version": "0.1.0",
+  "description": "Sightline CLI — The comprehension and control layer for AI-built software",
+  "bin": {
+    "sightline": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/cli.js",
+    "test": "node --test dist/**/*.test.js"
+  },
+  "dependencies": {
+    "@sightline/adapter-nextjs": "workspace:*",
+    "@sightline/core": "workspace:*",
+    "@sightline/extractor": "workspace:*",
+    "@sightline/store": "workspace:*",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "open": "^10.1.0",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^5.7.0"
+  }
+}
