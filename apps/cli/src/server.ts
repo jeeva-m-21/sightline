@@ -37,9 +37,32 @@ export function startViewerServer(
         const entities = store.getEntities(latest.id);
         const edges = store.getEdges(latest.id);
         const projectTree = store.getProjectTree(latest.id);
+        const flows = store.getFlows(latest.id);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ snapshot: latest, clusters, entities, edges, projectTree, projectDir }));
+        res.end(JSON.stringify({ snapshot: latest, clusters, entities, edges, projectTree, flows, projectDir }));
+        return;
+      }
+
+      if (url.pathname === '/api/flows') {
+        const latest = store.getLatestSnapshot();
+        const flows = latest ? store.getFlows(latest.id) : [];
+        const reqId = url.searchParams.get('id');
+
+        if (reqId) {
+          const matched = flows.find((f) => f.id === reqId);
+          if (!matched) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Flow not found' }));
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(matched));
+          return;
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ flows }));
         return;
       }
 

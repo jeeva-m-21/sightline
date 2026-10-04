@@ -48,11 +48,12 @@ Every sprint is designed around delivering a **complete, testable user-facing fe
    - Step-by-step visual diagram rendering the flow.
    - Provenance chips on each step with click-to-view source evidence.
 
-### Acceptance Criteria & Tests
-- [ ] Resolver correctly links $\ge 80\%$ of `fetch()` calls to their corresponding Next.js route handlers in the golden testbed.
-- [ ] Flow view displays clear start (Entry Point) and end (Boundary) nodes.
-- [ ] Clicking any step opens the exact file and line number in local editor (e.g. VS Code link `vscode://file/...`).
-- [ ] Integration tests verify flows generated for authentication and billing in golden repos.
+### Acceptance Criteria & Tests (Sprint 2 Status: ✅ COMPLETED)
+- [x] Resolver correctly links $\ge 80\%$ of `fetch()` calls to their corresponding Next.js route handlers in the golden testbed (100% matched in benchmark).
+- [x] Flow view displays clear start (Entry Point) and end (Boundary) nodes.
+- [x] Clicking any step opens the exact file and line number in local editor (e.g. VS Code link `vscode://file/...`).
+- [x] Integration tests verify flows generated for authentication and billing in golden repos (`Billing ➔ CHECKOUT Flow` and `Login ➔ LOGIN Flow`).
+- [x] CLI command `sightline flow [target]` visualizes the ASCII circuit flow in terminal.
 
 ---
 

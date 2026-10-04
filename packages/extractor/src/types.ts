@@ -30,6 +30,7 @@ export interface ExtractedCall {
 export interface ExtractedJsx {
   tag: string;
   line: number;
+  props?: Record<string, string>;
 }
 
 export interface ExtractedFile {

@@ -17,6 +17,7 @@
     "@sightline/adapter-nextjs": "workspace:*",
     "@sightline/core": "workspace:*",
     "@sightline/extractor": "workspace:*",
+    "@sightline/flow-builder": "workspace:*",
     "@sightline/store": "workspace:*",
     "chalk": "^5.4.1",
     "commander": "^13.1.0",

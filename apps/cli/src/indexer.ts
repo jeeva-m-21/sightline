@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { NextJsAdapter } from '@sightline/adapter-nextjs';
 import { SightlineStore } from '@sightline/store';
+import { FlowBuilder, TraceFlow } from '@sightline/flow-builder';
 import { Edge, Entity, EntityState, Snapshot } from '@sightline/core';
 
 export interface IndexResult {
@@ -10,6 +11,7 @@ export interface IndexResult {
   clusterCount: number;
   routeCount: number;
   symbolCount: number;
+  flowCount: number;
   durationMs: number;
 }
 
@@ -141,8 +143,36 @@ export async function runIndexingPipeline(projectDir: string, dbPath: string): P
     }
   }
 
+  // Materialize Cross-Boundary Flows
+  const fileContents = new Map<string, string>();
+  for (const file of analysis.extractedFiles) {
+    try {
+      const fullPath = path.resolve(projectDir, file.filePath);
+      const content = await fs.readFile(fullPath, 'utf-8');
+      fileContents.set(file.filePath, content);
+    } catch {
+      // Ignored
+    }
+  }
+
+  const flowBuilder = new FlowBuilder();
+  const flows = flowBuilder.buildFlows(
+    snapshotId,
+    analysis.routes,
+    analysis.extractedFiles,
+    fileContents
+  );
+
   // Save in store
-  store.saveSnapshot(snapshot, entities, entityStates, edges, analysis.clusters, analysis.projectTree);
+  store.saveSnapshot(
+    snapshot,
+    entities,
+    entityStates,
+    edges,
+    analysis.clusters,
+    analysis.projectTree,
+    flows
+  );
   store.close();
 
   const totalRoutes = analysis.clusters.reduce((acc, c) => acc + c.routes.length, 0);
@@ -152,6 +182,7 @@ export async function runIndexingPipeline(projectDir: string, dbPath: string): P
     clusterCount: analysis.clusters.length,
     routeCount: totalRoutes,
     symbolCount: entities.length,
+    flowCount: flows.length,
     durationMs: Date.now() - startTime,
   };
 }

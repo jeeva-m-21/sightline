@@ -21,6 +21,7 @@ test('End-to-End CLI Pipeline: runIndexingPipeline and startViewerServer', async
   assert.ok(indexResult.clusterCount >= 3, 'Must have at least 3 feature clusters');
   assert.ok(indexResult.routeCount >= 5, 'Must detect at least 5 routes');
   assert.ok(indexResult.symbolCount >= 5, 'Must extract at least 5 symbols');
+  assert.ok(indexResult.flowCount >= 2, 'Must discover at least 2 cross-boundary flows');
   assert.ok(indexResult.durationMs < 2000, 'Must complete in under 2s');
 
   // 2. Start Viewer Server
@@ -44,8 +45,15 @@ test('End-to-End CLI Pipeline: runIndexingPipeline and startViewerServer', async
   assert.ok(data.clusters.length >= 3, 'API must return detected feature clusters');
   assert.ok(data.entities.length >= 5, 'API must return extracted entities');
   assert.ok(data.projectTree, 'API must return project directory tree');
+  assert.ok(data.flows.length >= 2, 'API must return discovered flows');
 
-  // 5. Test HTTP GET /api/file
+  // 5. Test HTTP GET /api/flows
+  const flowsRes = await fetch(`${instance.url}/api/flows`);
+  assert.equal(flowsRes.status, 200);
+  const flowsData = (await flowsRes.json()) as any;
+  assert.ok(flowsData.flows.length >= 2, 'Endpoint /api/flows must return flows array');
+
+  // 6. Test HTTP GET /api/file
   const fileRes = await fetch(`${instance.url}/api/file?path=app/billing/page.tsx`);
   assert.equal(fileRes.status, 200);
   const fileData = (await fileRes.json()) as any;

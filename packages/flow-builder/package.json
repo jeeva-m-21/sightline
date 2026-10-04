@@ -1,7 +1,7 @@
 {
-  "name": "@sightline/store",
+  "name": "@sightline/flow-builder",
   "version": "0.1.0",
-  "description": "Local SQLite database and snapshot engine for Sightline",
+  "description": "Cross-boundary flow resolution and traversal engine for Sightline",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -12,11 +12,9 @@
   "dependencies": {
     "@sightline/adapter-nextjs": "workspace:*",
     "@sightline/core": "workspace:*",
-    "@sightline/flow-builder": "workspace:*",
-    "better-sqlite3": "^13.0.3"
+    "@sightline/extractor": "workspace:*"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.4",
     "typescript": "^5.7.0"
   }

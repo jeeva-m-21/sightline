@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import { Edge, Entity, EntityState, Snapshot } from '@sightline/core';
 import { FeatureCluster, RepoFileNode } from '@sightline/adapter-nextjs';
+import { TraceFlow } from '@sightline/flow-builder';
 import { SCHEMA_SQL } from './schema.js';
 
 export class SightlineStore {
@@ -22,7 +23,8 @@ export class SightlineStore {
     states: EntityState[],
     edges: Edge[],
     clusters: FeatureCluster[],
-    projectTree?: RepoFileNode
+    projectTree?: RepoFileNode,
+    flows?: TraceFlow[]
   ): void {
     const insertSnapshot = this.db.prepare(`
       INSERT OR REPLACE INTO snapshot (id, repo_id, git_sha, parent_id, kind, created_at)
@@ -55,6 +57,11 @@ export class SightlineStore {
     const insertTree = this.db.prepare(`
       INSERT OR REPLACE INTO project_tree (snapshot_id, tree_json)
       VALUES (?, ?)
+    `);
+
+    const insertFlow = this.db.prepare(`
+      INSERT OR REPLACE INTO flow (id, snapshot_id, entry_entity, name, steps, min_provenance)
+      VALUES (?, ?, ?, ?, ?, ?)
     `);
 
     // Run transaction
@@ -110,9 +117,30 @@ export class SightlineStore {
       if (projectTree) {
         insertTree.run(snapshot.id, JSON.stringify(projectTree));
       }
+
+      if (flows) {
+        for (const f of flows) {
+          insertFlow.run(
+            f.id,
+            snapshot.id,
+            f.entryPoint.entityId,
+            f.name,
+            JSON.stringify(f),
+            f.minProvenance
+          );
+        }
+      }
     });
 
     transaction();
+  }
+
+  public getFlows(snapshotId: string): TraceFlow[] {
+    const rows = this.db
+      .prepare('SELECT steps FROM flow WHERE snapshot_id = ?')
+      .all(snapshotId) as Array<{ steps: string }>;
+
+    return rows.map((r) => JSON.parse(r.steps) as TraceFlow);
   }
 
   public getProjectTree(snapshotId: string): RepoFileNode | null {

@@ -41,6 +41,9 @@ importers:
       '@sightline/extractor':
         specifier: workspace:*
         version: link:../../packages/extractor
+      '@sightline/flow-builder':
+        specifier: workspace:*
+        version: link:../../packages/flow-builder
       '@sightline/store':
         specifier: workspace:*
         version: link:../../packages/store
@@ -105,6 +108,25 @@ importers:
         specifier: ^5.7.0
         version: 5.9.3
 
+  packages/flow-builder:
+    dependencies:
+      '@sightline/adapter-nextjs':
+        specifier: workspace:*
+        version: link:../adapter-nextjs
+      '@sightline/core':
+        specifier: workspace:*
+        version: link:../core
+      '@sightline/extractor':
+        specifier: workspace:*
+        version: link:../extractor
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.4
+        version: 26.6.4
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   packages/store:
     dependencies:
       '@sightline/adapter-nextjs':
@@ -113,6 +135,9 @@ importers:
       '@sightline/core':
         specifier: workspace:*
         version: link:../core
+      '@sightline/flow-builder':
+        specifier: workspace:*
+        version: link:../flow-builder
       better-sqlite3:
         specifier: ^13.0.3
         version: 13.0.3

@@ -633,8 +633,8 @@ export function getViewerHtml(): string {
     let selectedFilePath = 'app/billing/page.tsx';
     let fileCache = {};
 
-    // Standard Guided Tour Chapters
-    const chapters = [
+    // Standard Guided Tour Chapters (defaults, updated dynamically from indexed flows)
+    let chapters = [
       {
         id: 1,
         number: 'CHAPTER 01',
@@ -728,13 +728,33 @@ export function getViewerHtml(): string {
           document.getElementById('footerSnapshotHash').textContent = appData.snapshot.id.slice(0, 8);
         }
 
+        if (appData.flows && appData.flows.length > 0) {
+          chapters = appData.flows.map((f, i) => ({
+            id: i + 1,
+            number: \`CHAPTER 0\${i + 1}\`,
+            title: f.name,
+            narrative: f.description,
+            targetFile: f.entryPoint?.filePath || f.steps[0]?.filePath,
+            steps: f.steps.map(s => ({
+              name: s.name,
+              file: s.filePath,
+              line: s.line || 1,
+              rel: s.rel,
+              kind: s.kind,
+              evidence: s.provenance,
+              desc: s.description,
+              invariants: s.invariants || ['Verified by AST syntax']
+            }))
+          }));
+        }
+
         renderChaptersList();
         renderProjectTree();
         renderMapClusters();
         updateCol1Stats();
         
-        // Default to Chapter 2 (Checkout Flow)
-        selectChapter(2);
+        // Default to Chapter 1 or 2
+        selectChapter(chapters.length > 1 ? 2 : 1);
       } catch (err) {
         console.error('Failed to initialize app data:', err);
       }

@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS project_tree (
 CREATE TABLE IF NOT EXISTS flow (
   id             TEXT PRIMARY KEY,
   snapshot_id    TEXT REFERENCES snapshot(id),
-  entry_entity   TEXT REFERENCES entity(id),
+  entry_entity   TEXT,
   name           TEXT NOT NULL,
   steps          TEXT NOT NULL,
   min_provenance TEXT NOT NULL

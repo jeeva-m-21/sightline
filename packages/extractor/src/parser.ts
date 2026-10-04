@@ -144,7 +144,7 @@ export class AstExtractor {
         }
       }
 
-      // 6. JSX Elements (e.g. <Button />, <UserCard>)
+      // 6. JSX Elements (e.g. <Button onClick={handleUpgrade} />, <form onSubmit={handleSubmit}>)
       if (
         node.type === 'jsx_element' ||
         node.type === 'jsx_self_closing_element'
@@ -156,15 +156,14 @@ export class AstExtractor {
         const tagNode = openNode?.namedChildren.find(
           (c) => c.type === 'identifier' || c.type === 'nested_identifier'
         );
-        if (tagNode) {
+        if (tagNode && openNode) {
           const tag = tagNode.text;
-          // React custom components start with uppercase
-          if (/^[A-Z]/.test(tag)) {
-            renderedComponents.push({
-              tag,
-              line: node.startPosition.row + 1,
-            });
-          }
+          const props = this.parseJsxProps(openNode);
+          renderedComponents.push({
+            tag,
+            line: node.startPosition.row + 1,
+            props: Object.keys(props).length > 0 ? props : undefined,
+          });
         }
       }
 
@@ -226,6 +225,30 @@ export class AstExtractor {
       specifiers,
       line: node.startPosition.row + 1,
     };
+  }
+
+  private parseJsxProps(node: SyntaxNode): Record<string, string> {
+    const props: Record<string, string> = {};
+    for (const child of node.namedChildren) {
+      if (child.type === 'jsx_attribute') {
+        const propNameNode = child.namedChildren.find((c) => c.type === 'property_identifier');
+        if (propNameNode) {
+          const propName = propNameNode.text;
+          const valNode = child.namedChildren.find((c) => c !== propNameNode);
+          if (valNode) {
+            if (valNode.type === 'jsx_expression') {
+              const exprChild = valNode.namedChildren[0];
+              if (exprChild) {
+                props[propName] = exprChild.text;
+              }
+            } else if (valNode.type === 'string' || valNode.type === 'string_fragment') {
+              props[propName] = valNode.text.replace(/['"]/g, '');
+            }
+          }
+        }
+      }
+    }
+    return props;
   }
 
   private classifySymbolKind(name: string, isTsx: boolean): SymbolKind {
